@@ -12,10 +12,10 @@ void fechamentoDia();
 void fechamentoVoo();
 
 struct voo{
-        int assentos;
-        float valorEcon;
-        float valorExec;
-    };
+    int assentos;
+    float valorEcon;
+    float valorExec;
+};
 
 struct passageiro{
     char* nome;
