@@ -108,6 +108,24 @@ void abrirVoo(char *entrada){
     //hello, veiga
 }
 
+char* leiaString() {
+    char *buffer = malloc(1 * sizeof(char));
+    int size = 1, id = 0;
+    char ch;
+    getchar();
+
+    while ((ch = getchar()) != ',' && ch != EOF) {
+        if (id == size - 1) {
+            size *= 2;
+            buffer = realloc(buffer, size * sizeof(char));
+        }
+        buffer[id++] = ch;
+    }
+    buffer[id] = '\0';
+
+    return buffer;
+}
+
 void realizarReserva(char *entrada){
 
 }
