@@ -104,8 +104,8 @@ void abrirVoo(char *entrada){
 
     sscanf(entrada, " %[^ ] %d %f %f", comando, &assentos, &valorEcon, &valorExec);
     printf("Assentos: %d, valorEcon: %f, valorExec %f\n", assentos, valorEcon, valorExec);
-
-
+    
+    //hello, veiga
 }
 
 void realizarReserva(char *entrada){
