@@ -34,7 +34,6 @@ int main(void){
     
     char comando[3];
     int comandoEncoded = -1;
-    
 
     do {
         char* entrada = malloc(500 * sizeof(char));
@@ -104,7 +103,7 @@ void abrirVoo(char *entrada){
 
     sscanf(entrada, " %[^ ] %d %f %f", comando, &assentos, &valorEcon, &valorExec);
     printf("Assentos: %d, valorEcon: %f, valorExec %f\n", assentos, valorEcon, valorExec);
-    
+
     //hello, veiga
 }
 
