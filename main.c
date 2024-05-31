@@ -10,16 +10,18 @@ typedef struct{
 } voo;
 
 typedef struct{
-    char* nome;
-    char* sobrenome;
-    int CPF;
-    char data[11]; //dd/mm/yyyy 
-    int numVoo;
-    int assento;
-    int classe; //econ, 0 | exec, 1;
+    char nome[50];
+    char sobrenome[50];
+    char CPF[20];
+    int dia;
+    int mes;
+    int ano; //dd/mm/yyyy 
+    char numVoo[10];
+    char assento[10];
+    char classe[20]; //econ, 0 | exec, 1;
     float valor;
-    char origem[3]; // código de aeroposto e.g. CGH;
-    char destino[3];
+    char origem[5]; // código de aeroposto e.g. CGH;
+    char destino[5];
 } passageiro;
 
 
@@ -39,9 +41,9 @@ int main(void){
     char *comando;
     int comandoEncoded = -1;
 
-    passageiro *reservas;
+    passageiro *reservas = malloc(10 * sizeof(passageiro)); //aqui tem que fazer um realloc mais dinamico
     int numReservas = 0;
-
+    
     carregarReservas(reservas, &numReservas);
 
     do {
@@ -135,22 +137,48 @@ char* leiaString() {
 void carregarReservas(passageiro *reservas, int *n){
     FILE *passageiros;
     passageiros = fopen("passageiros.txt", "r");
+
     passageiro r;
     char * linha = malloc(200 * sizeof(char));
 
-    do {
-        fgets(linha, 1000, passageiros);
-        sscanf(linha, "%s %s %d %s %d %d %d %f %s %s", r.nome, r.sobrenome, &r.CPF, r.data, &r.numVoo, &r.assento, &r.classe, &r.valor, r.origem, r.destino);
+    while(fgets(linha, 1000, passageiros) != NULL) {
+        printf(linha, "%s\n", linha);
+        sscanf(linha, "%s", r.nome);
+        sscanf(linha, "%s", r.sobrenome);
+        sscanf(linha, "%s", r.CPF);
+        sscanf(linha, "%d", &r.dia);
+        sscanf(linha, "%d", &r.mes);
+        sscanf(linha, "%d", &r.ano);
+        sscanf(linha, "%s", r.numVoo);
+        sscanf(linha, "%s", r.assento);
+        sscanf(linha, "%s", r.classe);
+        sscanf(linha, "%f", &r.valor);
+        sscanf(linha, "%s", r.origem);
+        sscanf(linha, "%s", r.destino);
+        getchar();
 
         reservas[(*n)++] = r;
-    } while(linha != NULL);
-
+    } 
 }
 
 void realizarReserva(passageiro *reservas,  int *n){
     passageiro r;
-   
-    scanf("%s %s %d %s %d %d %d %f %s %s", r.nome, r.sobrenome, &r.CPF, r.data, &r.numVoo, &r.assento, &r.classe, &r.valor, r.origem, r.destino);
+    // RR Euclides Simon 222.111.333-12 12 12 2024 V001 B01 economica 1200.00 CGH RAO
+    
+    scanf("%s", r.nome);
+    scanf("%s", r.sobrenome);
+    scanf("%s", r.CPF);
+    scanf("%d", &r.dia);
+    scanf("%d", &r.mes);
+    scanf("%d", &r.ano);
+    scanf("%s", r.numVoo);
+    scanf("%s", r.assento);
+    scanf("%s", r.classe);
+    scanf("%f", &r.valor);
+    scanf("%s", r.origem);
+    scanf("%s", r.destino);
+    getchar();
+
     reservas[(*n)++] = r;
     
 }
@@ -164,7 +192,7 @@ void modificarReserva(){
 }
 
 void cancelarReserva(){
-
+    // aqui eu acho que é melhor editar o documento e recarregar as reservas... talvez ¯\_(ツ)_/¯
 }
 
 void fechamentoDia(passageiro *reservas, int *n){
@@ -174,7 +202,7 @@ void fechamentoDia(passageiro *reservas, int *n){
     for (int i = 0; i < *n; i++)
     {
         passageiro r = reservas[i];
-        fprintf(passageiros, "%s %s %d %s %d %d %d %f %s %s", r.nome, r.sobrenome, r.CPF, r.data, r.numVoo, r.assento, r.classe, r.valor, r.origem, r.destino);
+        fprintf(passageiros, "%s %s %s %d %d %d %s %s %s %f %s %s\n", r.nome, r.sobrenome, r.CPF, r.dia, r.mes, r.ano, r.numVoo, r.assento, r.classe, r.valor, r.origem, r.destino);
     }
     
 }
