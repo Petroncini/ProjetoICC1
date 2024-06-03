@@ -22,26 +22,28 @@ typedef struct{
     float valor;
     char origem[5]; // código de aeroposto e.g. CGH;
     char destino[5];
+    int cancelado;
 } passageiro;
 
 
 int encodeComand(char *comando);
-void abrirVoo();
-void realizarReserva(passageiro *reservas,  int *n, int *numReservasDia);
-void consultarReserva();
-void modificarReserva();
-void cancelarReserva();
-void fechamentoDia(passageiro *reservas, int *n, int numReservasDia);
-void fechamentoVoo(passageiro *reservas, int *n);
-void carregarReservas(passageiro *reservas, int *n);
+void abrirVoo(); //DONE
+void realizarReserva(passageiro *reservas,  int *n, int *numReservasDia); //DONE
+void consultarReserva(); //TODO, Nicolas
+void modificarReserva(); //TODO, Veiga
+void cancelarReserva(); //TODO, Nicolas
+void fechamentoDia(passageiro *reservas, int *n, int numReservasDia); //DONE
+void fechamentoVoo(passageiro *reservas, int *n); //DONE
+void carregarReservas(passageiro *reservas, int *n); //DONE
 char* leiaString();
+void free_passageiros(passageiro *reservas, int n);
 
 int main(void){
     
     char comando[3];
     int comandoEncoded = -1;
 
-    passageiro *reservas = malloc(10 * sizeof(passageiro)); //aqui tem que fazer um realloc mais dinamico
+    passageiro *reservas = malloc(10 * sizeof(passageiro)); //aqui tem que fazer um realloc mais dinamico, DONE
     int numReservas = 0;
     int numReservasDia = 0;
     
@@ -78,6 +80,7 @@ int main(void){
         }
     } while(comandoEncoded != 5 && comandoEncoded != 6);
     
+    free_passageiros(reservas, numReservas);
     return 0;
 }
 
@@ -157,13 +160,20 @@ void carregarReservas(passageiro *reservas, int *n){
         
         r.nome = malloc(strlen(nome));
         r.sobrenome = malloc(strlen(sobrenome));
+        r.cancelado = 0;
 
         strcpy(r.nome, nome);
         strcpy(r.sobrenome, sobrenome);
 
         reservas[(*n)++] = r;
-    } 
 
+        if(*n%10 == 0){
+            reservas = realloc(reservas, (*n + 10) * sizeof(passageiro));
+        }
+    } 
+    free(linha);
+    free(nome);
+    free(sobrenome);
     fclose(passageiros);
 }
 
@@ -173,6 +183,7 @@ void realizarReserva(passageiro *reservas,  int *n, int *numReservasDia){
     // RR Marta Rocha 999.888.222-21 12 12 2024 V001 C02 executiva 2500.00 CGH RAO
     r.nome = leiaString();
     r.sobrenome = leiaString();
+    r.cancelado = 0;
     (*numReservasDia)++;
     
     scanf("%s %d %d %d %s %s %s %f %s %s",
@@ -204,6 +215,8 @@ void fechamentoDia(passageiro *reservas, int *n, int numReservasDia){
 
     for (int i = 0; i < *n; i++)
     {   
+        if(reservas[i].cancelado){continue;}
+
         posicao += reservas[i].valor;
         passageiro r = reservas[i];
         fprintf(passageiros, "%s %s %s %d %d %d %s %s %s %f %s %s\n", r.nome, r.sobrenome, r.CPF, r.dia, r.mes, r.ano, r.numVoo, r.assento, r.classe, r.valor, r.origem, r.destino);
@@ -230,6 +243,7 @@ void fechamentoVoo(passageiro *reservas, int *n){
 
     for (int i = 0; i < *n; i++)
     {
+        if(reservas[i].cancelado){continue;}
         r = reservas[i];
         printf("%s\n", r.CPF);
         printf("%s %s\n", r.nome, r.sobrenome);
@@ -239,4 +253,13 @@ void fechamentoVoo(passageiro *reservas, int *n){
     printf("Valor Total: %f\n", valorTotal);
     printf("--------------------------------------------------\n");
     
+}
+
+void free_passageiros(passageiro *reservas, int n){
+    for (int i = 0; i < n; i++)
+    {
+        free(reservas[i].nome);
+        free(reservas[i].sobrenome);
+    }
+    free(reservas);
 }
