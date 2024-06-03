@@ -28,7 +28,8 @@ typedef struct{
 
 int encodeComand(char *comando);
 void abrirVoo(); //DONE
-void realizarReserva(passageiro *reservas,  int *n, int *numReservasDia); //DONE
+int vooAberto();
+void realizarReserva(passageiro *reservas,  int *n, int *numReservasDia, int assentos); //DONE
 void consultarReserva(); //TODO, Nicolas
 void modificarReserva(); //TODO, Veiga
 void cancelarReserva(); //TODO, Nicolas
@@ -48,7 +49,9 @@ int main(void){
     int numReservasDia = 0;
     
     carregarReservas(reservas, &numReservas);
-
+    int assentos;
+    assentos = vooAberto();
+    
     do {
         
         scanf("%s", comando);
@@ -61,7 +64,7 @@ int main(void){
                 abrirVoo();
                 break;
             case 1:
-                realizarReserva(reservas, &numReservas, &numReservasDia);
+                realizarReserva(reservas, &numReservas, &numReservasDia, assentos);
                 break;
             case 2:
                 consultarReserva();
@@ -123,6 +126,20 @@ void abrirVoo(){
     //hello, nicolas
 }
 
+int vooAberto(){
+    FILE *voos;
+    voos = fopen("voos.txt", "r");
+    char *voos_texto = malloc(50 * sizeof(char));
+    int assentos;
+
+    if(fgets(voos_texto, 50, voos) == NULL){
+        return -1;
+    }
+    
+    sscanf(voos_texto, "%d", &assentos);
+    return assentos;
+}
+
 char* leiaString() {
     char *buffer = malloc(1 * sizeof(char));
     int size = 1, id = 0;
@@ -177,22 +194,30 @@ void carregarReservas(passageiro *reservas, int *n){
     fclose(passageiros);
 }
 
-void realizarReserva(passageiro *reservas,  int *n, int *numReservasDia){
+void realizarReserva(passageiro *reservas,  int *n, int *numReservasDia, int assentos){
     passageiro r;
     // RR Euclides Simon 222.111.333-12 12 12 2024 V001 B01 economica 1200.00 CGH RAO
     // RR Marta Rocha 999.888.222-21 12 12 2024 V001 C02 executiva 2500.00 CGH RAO
     r.nome = leiaString();
     r.sobrenome = leiaString();
     r.cancelado = 0;
-    (*numReservasDia)++;
+    
     
     scanf("%s %d %d %d %s %s %s %f %s %s",
                r.CPF, &r.dia, &r.mes, &r.ano,
                r.numVoo, r.assento, r.classe, &r.valor, r.origem, r.destino);
     getchar();
+
+    if(assentos == -1){
+        printf("Nenhum voo aberto\n");
+        return;
+    } else if(*n >= assentos){
+        printf("Nenhum assento disponível\n");
+        return;
+    }
     
     reservas[(*n)++] = r;
-    
+    (*numReservasDia)++;
 }
 
 void consultarReserva(){
