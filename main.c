@@ -121,6 +121,7 @@ void abrirVoo(){
     getchar();
 
     fprintf(voos, "%d, %f, %f\n", assentos, valorEcon, valorExec);
+    fclose(voos);
 
     //hello, veiga
     //hello, nicolas
@@ -169,7 +170,7 @@ void carregarReservas(passageiro *reservas, int *n){
     char *nome = malloc(50 * sizeof(char));
     char *sobrenome = malloc(50 * sizeof(char));
 
-    while(fgets(linha, 1000, passageiros) != NULL) {
+    while(fgets(linha, 200, passageiros) != NULL) {
         printf("%s", linha);
         sscanf(linha, "%s %s %s %d %d %d %s %s %s %f %s %s",
                nome, sobrenome, r.CPF, &r.dia, &r.mes, &r.ano,
