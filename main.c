@@ -30,9 +30,9 @@ int encodeComand(char *comando);
 void abrirVoo(int *numAssentos); //DONE
 int vooAberto();
 void realizarReserva(passageiro *reservas,  int *n, int *numReservasDia, int assentos); //DONE
-void consultarReserva(); //TODO, Nicolas
+void consultarReserva(passageiro *reservas, int n); //Done, Nicolas
 void modificarReserva(passageiro *reservas, int *n); //TODO, Veiga
-void cancelarReserva(); //TODO, Nicolas
+void cancelarReserva(passageiro *reservas, int n); //Done, Nicolas
 void fechamentoDia(passageiro *reservas, int *n, int numReservasDia); //DONE
 void fechamentoVoo(passageiro *reservas, int *n); //DONE
 void carregarReservas(passageiro *reservas, int *n); //DONE
@@ -67,13 +67,13 @@ int main(void){
                 realizarReserva(reservas, &numReservas, &numReservasDia, numAssentos);
                 break;
             case 2:
-                consultarReserva();
+                consultarReserva(reservas, numReservas);
                 break;
             case 3:
                 modificarReserva(reservas, &numReservas);
                 break;
             case 4:
-                cancelarReserva();
+                cancelarReserva(reservas, numReservas);
                 break;
             case 5:
                 fechamentoDia(reservas, &numReservas, numReservasDia);
@@ -222,7 +222,18 @@ void realizarReserva(passageiro *reservas,  int *n, int *numReservasDia, int ass
     (*numReservasDia)++;
 }
 
-void consultarReserva(){
+void consultarReserva(passageiro *reservas, int n){
+    char cpf[20];
+    scanf(" %s", cpf);
+
+    for (int i=0; i<n; i++){
+        passageiro r;
+        r = reservas[i];
+        if (strcmp(r.CPF, cpf)==0){
+            printf("%s\n%s %s\n%d/%d/%d\nVoo: %s\nAssento: %s\nClasse: %s\nTrecho: %s %s\nValor: %0.2f\n", r.CPF, r.nome, r.sobrenome, r.dia, r.mes, r.ano, r.numVoo, r.assento, r.classe, r.origem, r.destino, r.valor);
+            printf("--------------------------------------------------\n");
+        }
+    }
 
 }
 
@@ -265,8 +276,16 @@ void modificarReserva(passageiro *reservas, int *n){
     free(sobrenome);
 }
 
-void cancelarReserva(){
-    // aqui eu acho que é melhor editar o documento e recarregar as reservas... talvez ¯\_(ツ)_/¯
+void cancelarReserva(passageiro *reservas, int n){
+    char cpf[20];
+    scanf(" %s", cpf);
+
+    for (int i=0; i<n; i++){
+        if (strcmp(reservas[i].CPF, cpf)==0){
+            reservas[i].cancelado = 1;
+        }
+    }
+
 }
 
 void fechamentoDia(passageiro *reservas, int *n, int numReservasDia){
@@ -312,7 +331,7 @@ void fechamentoVoo(passageiro *reservas, int *n){
         printf("%s\n\n", r.assento);
         valorTotal += r.valor;
     }
-    printf("Valor Total: %f\n", valorTotal);
+    printf("Valor Total: %0.2f\n", valorTotal);
     printf("--------------------------------------------------\n");
     
 }
