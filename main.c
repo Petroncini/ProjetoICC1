@@ -31,7 +31,7 @@ void abrirVoo(); //DONE
 int vooAberto();
 void realizarReserva(passageiro *reservas,  int *n, int *numReservasDia, int assentos); //DONE
 void consultarReserva(); //TODO, Nicolas
-void modificarReserva(); //TODO, Veiga
+void modificarReserva(passageiro *reservas, int *n); //TODO, Veiga
 void cancelarReserva(); //TODO, Nicolas
 void fechamentoDia(passageiro *reservas, int *n, int numReservasDia); //DONE
 void fechamentoVoo(passageiro *reservas, int *n); //DONE
@@ -70,7 +70,7 @@ int main(void){
                 consultarReserva();
                 break;
             case 3:
-                modificarReserva();
+                modificarReserva(reservas, &numReservas);
                 break;
             case 4:
                 cancelarReserva();
@@ -224,8 +224,41 @@ void consultarReserva(){
 
 }
 
-void modificarReserva(){
+void modificarReserva(passageiro *reservas, int *n){
+    // MR Marta Rocha 999.888.222-21 C03
+    char *nome, *sobrenome, CPF[20], assento[10];
+    nome = malloc(50 * sizeof(char));
+    sobrenome = malloc(50 * sizeof(char));
 
+    scanf("%s %s %s %s", nome, sobrenome, CPF, assento);
+    printf("nome: %s\n", nome);
+    printf("sobrenome: %s\n", sobrenome);
+    printf("CPF: %s\n", CPF);
+    printf("assento: %s\n", assento);
+    int idx = -1;
+    printf("LIDO");
+
+    for (int i = 0; i < *n; i++) {
+        if (!strcmp(nome, reservas[i].nome) || !strcmp(sobrenome, reservas[i].sobrenome) || !strcmp(CPF, reservas[i].CPF) || !strcmp(assento, reservas[i].assento)) {
+            idx = i;
+            strcpy(reservas[i].nome, nome);
+            strcpy(reservas[i].sobrenome, sobrenome);
+            strcpy(reservas[i].CPF, CPF);
+            strcpy(reservas[i].assento, assento);
+            break;
+        }
+    }
+
+    printf("Reserva Modificada:\n");
+    printf("%s\n", reservas[idx].CPF);
+    printf("%s %s\n", reservas[idx].nome, reservas[idx].sobrenome);
+    printf("%02d/%02d/%04d\n", reservas[idx].dia, reservas[idx].mes, reservas[idx].ano);
+    printf("Voo: %s\n", reservas[idx].numVoo);
+    printf("Assento: %s\n", reservas[idx].assento);
+    printf("Classe: %s\n", reservas[idx].classe);
+    printf("Trecho: %s %s\n", reservas[idx].origem, reservas[idx].destino);
+    printf("Valor: %.2f\n", reservas[idx].valor);
+    printf("--------------------------------------------------\n");
 }
 
 void cancelarReserva(){
