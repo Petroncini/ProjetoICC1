@@ -32,7 +32,7 @@ void consultarReserva();
 void modificarReserva();
 void cancelarReserva();
 void fechamentoDia(passageiro *reservas, int *n);
-void fechamentoVoo();
+void fechamentoVoo(passageiro *reservas, int *n);
 void carregarReservas(passageiro *reservas, int *n);
 char* leiaString();
 
@@ -45,6 +45,7 @@ int main(void){
     int numReservas = 0;
     
     carregarReservas(reservas, &numReservas);
+    printf("Flag\n");
 
     do {
         
@@ -71,7 +72,7 @@ int main(void){
                 fechamentoDia(reservas, &numReservas);
                 break;
             case 6:
-                fechamentoVoo();
+                fechamentoVoo(reservas, &numReservas);
         }
     } while(comandoEncoded != 5 && comandoEncoded != 6);
     
@@ -135,14 +136,18 @@ char* leiaString() {
 }
 
 void carregarReservas(passageiro *reservas, int *n){
+    printf("Carregando reservas...\n");
+
     FILE *passageiros;
     passageiros = fopen("passageiros.txt", "r");
+
+    printf("File opened...\n");
 
     passageiro r;
     char * linha = malloc(200 * sizeof(char));
 
     while(fgets(linha, 1000, passageiros) != NULL) {
-        printf(linha, "%s\n", linha);
+        printf("%s", linha);
         sscanf(linha, "%s", r.nome);
         sscanf(linha, "%s", r.sobrenome);
         sscanf(linha, "%s", r.CPF);
@@ -155,10 +160,14 @@ void carregarReservas(passageiro *reservas, int *n){
         sscanf(linha, "%f", &r.valor);
         sscanf(linha, "%s", r.origem);
         sscanf(linha, "%s", r.destino);
-        getchar();
-
         reservas[(*n)++] = r;
     } 
+
+    printf("\nReservations loaded.\n");
+    printf("flag2\n");
+
+    fclose(passageiros);
+    printf("File closed\n");
 }
 
 void realizarReserva(passageiro *reservas,  int *n){
@@ -207,6 +216,24 @@ void fechamentoDia(passageiro *reservas, int *n){
     
 }
 
-void fechamentoVoo(){
+void fechamentoVoo(passageiro *reservas, int *n){
+    printf("flag\n");
+    FILE *passageiros;
+    passageiros = fopen("passageiros.txt", "w");
 
+    printf("Voo Fechado!\n");
+    passageiro r;
+    float valorTotal = 0;
+
+    for (int i = 0; i < *n; i++)
+    {
+        r = reservas[i];
+        printf("%s\n", r.CPF);
+        printf("%s %s\n", r.nome, r.sobrenome);
+        printf("%s\n\n", r.assento);
+        valorTotal += r.valor;
+    }
+    printf("Valor Total: %f\n", valorTotal);
+    printf("--------------------------------------------------\n");
+    
 }
