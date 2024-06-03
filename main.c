@@ -27,7 +27,7 @@ typedef struct{
 
 
 int encodeComand(char *comando);
-void abrirVoo(); //DONE
+void abrirVoo(int *numAssentos); //DONE
 int vooAberto();
 void realizarReserva(passageiro *reservas,  int *n, int *numReservasDia, int assentos); //DONE
 void consultarReserva(); //TODO, Nicolas
@@ -49,8 +49,8 @@ int main(void){
     int numReservasDia = 0;
     
     carregarReservas(reservas, &numReservas);
-    int assentos;
-    assentos = vooAberto();
+    int numAssentos;
+    numAssentos = vooAberto();
     
     do {
         
@@ -61,10 +61,10 @@ int main(void){
         
         switch(comandoEncoded){
             case 0:
-                abrirVoo();
+                abrirVoo(&numAssentos);
                 break;
             case 1:
-                realizarReserva(reservas, &numReservas, &numReservasDia, assentos);
+                realizarReserva(reservas, &numReservas, &numReservasDia, numAssentos);
                 break;
             case 2:
                 consultarReserva();
@@ -109,7 +109,7 @@ int encodeComand(char *comando){
     }
 }
 
-void abrirVoo(){
+void abrirVoo(int *numAssentos){
     FILE *voos;
     voos = fopen("voos.txt", "w");
 
@@ -122,7 +122,7 @@ void abrirVoo(){
 
     fprintf(voos, "%d, %f, %f\n", assentos, valorEcon, valorExec);
     fclose(voos);
-
+    *numAssentos = assentos;
     //hello, veiga
     //hello, nicolas
 }
@@ -138,6 +138,7 @@ int vooAberto(){
     }
     
     sscanf(voos_texto, "%d", &assentos);
+    free(voos_texto);
     return assentos;
 }
 
@@ -260,6 +261,8 @@ void modificarReserva(passageiro *reservas, int *n){
     printf("Trecho: %s %s\n", reservas[idx].origem, reservas[idx].destino);
     printf("Valor: %.2f\n", reservas[idx].valor);
     printf("--------------------------------------------------\n");
+    free(nome);
+    free(sobrenome);
 }
 
 void cancelarReserva(){
