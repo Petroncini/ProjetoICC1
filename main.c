@@ -244,12 +244,7 @@ void modificarReserva(passageiro *reservas, int *n){
     sobrenome = malloc(50 * sizeof(char));
 
     scanf("%s %s %s %s", nome, sobrenome, CPF, assento);
-    printf("nome: %s\n", nome);
-    printf("sobrenome: %s\n", sobrenome);
-    printf("CPF: %s\n", CPF);
-    printf("assento: %s\n", assento);
     int idx = -1;
-    printf("LIDO");
 
     for (int i = 0; i < *n; i++) {
         if (!strcmp(nome, reservas[i].nome) || !strcmp(sobrenome, reservas[i].sobrenome) || !strcmp(CPF, reservas[i].CPF) || !strcmp(assento, reservas[i].assento)) {
