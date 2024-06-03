@@ -45,7 +45,6 @@ int main(void){
     int numReservas = 0;
     
     carregarReservas(reservas, &numReservas);
-    printf("Flag\n");
 
     do {
         
@@ -136,56 +135,32 @@ char* leiaString() {
 }
 
 void carregarReservas(passageiro *reservas, int *n){
-    printf("Carregando reservas...\n");
-
+    
     FILE *passageiros;
     passageiros = fopen("passageiros.txt", "r");
 
-    printf("File opened...\n");
 
     passageiro r;
     char * linha = malloc(200 * sizeof(char));
 
     while(fgets(linha, 1000, passageiros) != NULL) {
         printf("%s", linha);
-        sscanf(linha, "%s", r.nome);
-        sscanf(linha, "%s", r.sobrenome);
-        sscanf(linha, "%s", r.CPF);
-        sscanf(linha, "%d", &r.dia);
-        sscanf(linha, "%d", &r.mes);
-        sscanf(linha, "%d", &r.ano);
-        sscanf(linha, "%s", r.numVoo);
-        sscanf(linha, "%s", r.assento);
-        sscanf(linha, "%s", r.classe);
-        sscanf(linha, "%f", &r.valor);
-        sscanf(linha, "%s", r.origem);
-        sscanf(linha, "%s", r.destino);
+         sscanf(linha, "%s %s %s %d %d %d %s %s %s %f %s %s",
+               r.nome, r.sobrenome, r.CPF, &r.dia, &r.mes, &r.ano,
+               r.numVoo, r.assento, r.classe, &r.valor, r.origem, r.destino);
         reservas[(*n)++] = r;
     } 
 
-    printf("\nReservations loaded.\n");
-    printf("flag2\n");
-
     fclose(passageiros);
-    printf("File closed\n");
 }
 
 void realizarReserva(passageiro *reservas,  int *n){
     passageiro r;
     // RR Euclides Simon 222.111.333-12 12 12 2024 V001 B01 economica 1200.00 CGH RAO
     
-    scanf("%s", r.nome);
-    scanf("%s", r.sobrenome);
-    scanf("%s", r.CPF);
-    scanf("%d", &r.dia);
-    scanf("%d", &r.mes);
-    scanf("%d", &r.ano);
-    scanf("%s", r.numVoo);
-    scanf("%s", r.assento);
-    scanf("%s", r.classe);
-    scanf("%f", &r.valor);
-    scanf("%s", r.origem);
-    scanf("%s", r.destino);
+    scanf("%s %s %s %d %d %d %s %s %s %f %s %s",
+               r.nome, r.sobrenome, r.CPF, &r.dia, &r.mes, &r.ano,
+               r.numVoo, r.assento, r.classe, &r.valor, r.origem, r.destino);
     getchar();
 
     reservas[(*n)++] = r;
