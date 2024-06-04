@@ -29,13 +29,13 @@ typedef struct{
 int encodeComand(char *comando);
 void abrirVoo(int *numAssentos); //DONE
 int vooAberto();
-void realizarReserva(passageiro *reservas,  int *n, int *numReservasDia, int assentos); //DONE
+void realizarReserva(passageiro **reservas,  int *n, int *numReservasDia, int assentos); //DONE
 void consultarReserva(passageiro *reservas, int n); //Done, Nicolas
 void modificarReserva(passageiro *reservas, int *n); //TODO, Veiga
 void cancelarReserva(passageiro *reservas, int n); //Done, Nicolas
 void fechamentoDia(passageiro *reservas, int *n, int numReservasDia); //DONE
 void fechamentoVoo(passageiro *reservas, int *n); //DONE
-void carregarReservas(passageiro *reservas, int *n); //DONE
+void carregarReservas(passageiro **reservas, int *n); //DONE
 char* leiaString();
 void free_passageiros(passageiro *reservas, int n);
 
@@ -48,7 +48,7 @@ int main(void){
     int numReservas = 0;
     int numReservasDia = 0;
     
-    carregarReservas(reservas, &numReservas);
+    carregarReservas(&reservas, &numReservas);
     int numAssentos;
     numAssentos = vooAberto();
     
@@ -64,7 +64,7 @@ int main(void){
                 abrirVoo(&numAssentos);
                 break;
             case 1:
-                realizarReserva(reservas, &numReservas, &numReservasDia, numAssentos);
+                realizarReserva(&reservas, &numReservas, &numReservasDia, numAssentos);
                 break;
             case 2:
                 consultarReserva(reservas, numReservas);
@@ -159,7 +159,7 @@ char* leiaString() {
     return buffer;
 }
 
-void carregarReservas(passageiro *reservas, int *n){
+void carregarReservas(passageiro **reservas, int *n){
     
     FILE *passageiros;
     passageiros = fopen("passageiros.txt", "r");
@@ -184,10 +184,10 @@ void carregarReservas(passageiro *reservas, int *n){
         strcpy(r.nome, nome);
         strcpy(r.sobrenome, sobrenome);
 
-        reservas[(*n)++] = r;
+        (*reservas)[(*n)++] = r;
 
         if(*n%10 == 0){
-            reservas = realloc(reservas, (*n + 10) * sizeof(passageiro));
+            *reservas = realloc(*reservas, (*n + 10) * sizeof(passageiro));
         }
     } 
     free(linha);
@@ -196,7 +196,7 @@ void carregarReservas(passageiro *reservas, int *n){
     fclose(passageiros);
 }
 
-void realizarReserva(passageiro *reservas,  int *n, int *numReservasDia, int assentos){
+void realizarReserva(passageiro **reservas,  int *n, int *numReservasDia, int assentos){
     passageiro r;
     // RR Euclides Simon 222.111.333-12 12 12 2024 V001 B01 economica 1200.00 CGH RAO
     // RR Marta Rocha 999.888.222-21 12 12 2024 V001 C02 executiva 2500.00 CGH RAO
@@ -218,7 +218,12 @@ void realizarReserva(passageiro *reservas,  int *n, int *numReservasDia, int ass
         return;
     }
     
-    reservas[(*n)++] = r;
+    (*reservas)[(*n)++] = r;
+
+    if(*n%10 == 0){
+            *reservas = realloc(*reservas, (*n + 10) * sizeof(passageiro));
+    }
+
     (*numReservasDia)++;
 }
 
@@ -284,6 +289,7 @@ void cancelarReserva(passageiro *reservas, int n){
 }
 
 void fechamentoDia(passageiro *reservas, int *n, int numReservasDia){
+    
     FILE *passageiros;
     passageiros = fopen("passageiros.txt", "w");
 
