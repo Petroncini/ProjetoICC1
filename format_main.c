@@ -1,21 +1,20 @@
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
-
-typedef struct{
+typedef struct {
     int assentos;
     float valorEcon;
     float valorExec;
 } voo;
 
-typedef struct{
-    char *nome;
-    char *sobrenome;
+typedef struct {
+    char* nome;
+    char* sobrenome;
     char CPF[20];
     int dia;
     int mes;
-    int ano; //dd/mm/yyyy 
+    int ano; // dd/mm/yyyy
     char numVoo[10];
     char assento[10];
     char classe[20];
@@ -25,92 +24,92 @@ typedef struct{
     int cancelado;
 } passageiro;
 
-
-int encodeComand(char *comando);
-void abrirVoo(int *numAssentos); //DONE
+int encodeComand(char* comando);
+void abrirVoo(int* numAssentos); // DONE
 int vooAberto();
-void realizarReserva(passageiro **reservas,  int *n, int *numReservasDia, int assentos); //DONE
-void consultarReserva(passageiro *reservas, int n); //Done, Nicolas
-void modificarReserva(passageiro *reservas, int *n); //TODO, Veiga
-void cancelarReserva(passageiro *reservas, int n); //Done, Nicolas
-void fechamentoDia(passageiro *reservas, int *n, int numReservasDia); //DONE
-void fechamentoVoo(passageiro *reservas, int *n); //DONE
-void carregarReservas(passageiro **reservas, int *n); //DONE
+void realizarReserva(passageiro** reservas, int* n, int* numReservasDia, int assentos); // DONE
+void consultarReserva(passageiro* reservas, int n); // Done, Nicolas
+void modificarReserva(passageiro* reservas, int* n); // TODO, Veiga
+void cancelarReserva(passageiro* reservas, int n); // Done, Nicolas
+void fechamentoDia(passageiro* reservas, int* n, int numReservasDia); // DONE
+void fechamentoVoo(passageiro* reservas, int* n); // DONE
+void carregarReservas(passageiro** reservas, int* n); // DONE
 char* leiaString();
-void free_passageiros(passageiro *reservas, int n);
+void free_passageiros(passageiro* reservas, int n);
 
-int main(void){
-    
+int main(void)
+{
     char comando[3];
     int comandoEncoded = -1;
 
-    passageiro *reservas = malloc(10 * sizeof(passageiro)); //aqui tem que fazer um realloc mais dinamico, DONE
+    passageiro* reservas = malloc(10 * sizeof(passageiro)); // aqui tem que fazer um realloc mais dinamico, DONE
     int numReservas = 0;
     int numReservasDia = 0;
-    
+
     carregarReservas(&reservas, &numReservas);
     int numAssentos;
     numAssentos = vooAberto();
-    
+
     do {
-        
         scanf("%s", comando);
         getchar();
 
         comandoEncoded = encodeComand(comando);
-        
-        switch(comandoEncoded){
-            case 0:
-                abrirVoo(&numAssentos);
-                break;
-            case 1:
-                realizarReserva(&reservas, &numReservas, &numReservasDia, numAssentos);
-                break;
-            case 2:
-                consultarReserva(reservas, numReservas);
-                break;
-            case 3:
-                modificarReserva(reservas, &numReservas);
-                break;
-            case 4:
-                cancelarReserva(reservas, numReservas);
-                break;
-            case 5:
-                fechamentoDia(reservas, &numReservas, numReservasDia);
-                break;
-            case 6:
-                fechamentoVoo(reservas, &numReservas);
+
+        switch (comandoEncoded) {
+        case 0:
+            abrirVoo(&numAssentos);
+            break;
+        case 1:
+            realizarReserva(&reservas, &numReservas, &numReservasDia, numAssentos);
+            break;
+        case 2:
+            consultarReserva(reservas, numReservas);
+            break;
+        case 3:
+            modificarReserva(reservas, &numReservas);
+            break;
+        case 4:
+            cancelarReserva(reservas, numReservas);
+            break;
+        case 5:
+            fechamentoDia(reservas, &numReservas, numReservasDia);
+            break;
+        case 6:
+            fechamentoVoo(reservas, &numReservas);
         }
-    } while(comandoEncoded != 5 && comandoEncoded != 6);
-    
+    } while (comandoEncoded != 5 && comandoEncoded != 6);
+
     free_passageiros(reservas, numReservas);
     return 0;
 }
 
-int encodeComand(char *comando){
-    if(comando[0] == 'A' && comando[1] == 'V'){ //AV
+int encodeComand(char* comando)
+{
+    if (comando[0] == 'A' && comando[1] == 'V') { // AV
         return 0; // AV
-    } else if(comando[0] == 'C'){
-        if(comando[1] == 'R'){
+    } else if (comando[0] == 'C') {
+        if (comando[1] == 'R') {
             return 2; // CR
         } else {
             return 4; // CA
         }
-    } else if(comando[1] == 'R'){
-        if(comando[0] == 'R'){
-            return 1; //RR
+    } else if (comando[1] == 'R') {
+        if (comando[0] == 'R') {
+            return 1; // RR
         } else {
-            return 3; //MR
+            return 3; // MR
         }
-    } else if(comando[1] == 'V'){
-        return 6; //FA
+    } else if (comando[1] == 'V') {
+        return 6; // FA
     } else {
-        return 5; //FD
+        return 5; // FD
     }
 }
 
-void abrirVoo(int *numAssentos){
-    FILE *voos;
+void abrirVoo(int* numAssentos)
+{
+    FILE* voos;
     voos = fopen("voos.txt", "w");
 
     int assentos;
@@ -123,27 +122,29 @@ void abrirVoo(int *numAssentos){
     fprintf(voos, "%d, %f, %f\n", assentos, valorEcon, valorExec);
     fclose(voos);
     *numAssentos = assentos;
-    //hello, veiga
-    //hello, nicolas
+    // hello, veiga
+    // hello, nicolas
 }
 
-int vooAberto(){
-    FILE *voos;
+int vooAberto()
+{
+    FILE* voos;
     voos = fopen("voos.txt", "r");
-    char *voos_texto = malloc(50 * sizeof(char));
+    char* voos_texto = malloc(50 * sizeof(char));
     int assentos;
 
-    if(fgets(voos_texto, 50, voos) == NULL){
+    if (fgets(voos_texto, 50, voos) == NULL) {
         return -1;
     }
-    
+
     sscanf(voos_texto, "%d", &assentos);
     free(voos_texto);
     return assentos;
 }
 
-char* leiaString() {
-    char *buffer = malloc(1 * sizeof(char));
+char* leiaString()
+{
+    char* buffer = malloc(1 * sizeof(char));
     int size = 1, id = 0;
     char ch;
 
@@ -159,24 +160,24 @@ char* leiaString() {
     return buffer;
 }
 
-void carregarReservas(passageiro **reservas, int *n){
-    
-    FILE *passageiros;
+void carregarReservas(passageiro** reservas, int* n)
+{
+
+    FILE* passageiros;
     passageiros = fopen("passageiros.txt", "r");
 
-
     passageiro r;
-    char * linha = malloc(200 * sizeof(char));
+    char* linha = malloc(200 * sizeof(char));
 
-    char *nome = malloc(50 * sizeof(char));
-    char *sobrenome = malloc(50 * sizeof(char));
+    char* nome = malloc(50 * sizeof(char));
+    char* sobrenome = malloc(50 * sizeof(char));
 
-    while(fgets(linha, 200, passageiros) != NULL) {
+    while (fgets(linha, 200, passageiros) != NULL) {
         printf("%s", linha);
         sscanf(linha, "%s %s %s %d %d %d %s %s %s %f %s %s",
-               nome, sobrenome, r.CPF, &r.dia, &r.mes, &r.ano,
-               r.numVoo, r.assento, r.classe, &r.valor, r.origem, r.destino);
-        
+            nome, sobrenome, r.CPF, &r.dia, &r.mes, &r.ano,
+            r.numVoo, r.assento, r.classe, &r.valor, r.origem, r.destino);
+
         r.nome = malloc(strlen(nome));
         r.sobrenome = malloc(strlen(sobrenome));
         r.cancelado = 0;
@@ -186,63 +187,64 @@ void carregarReservas(passageiro **reservas, int *n){
 
         (*reservas)[(*n)++] = r;
 
-        if(*n%10 == 0){
+        if (*n % 10 == 0) {
             *reservas = realloc(*reservas, (*n + 10) * sizeof(passageiro));
         }
-    } 
+    }
     free(linha);
     free(nome);
     free(sobrenome);
     fclose(passageiros);
 }
 
-void realizarReserva(passageiro **reservas,  int *n, int *numReservasDia, int assentos){
+void realizarReserva(passageiro** reservas, int* n, int* numReservasDia, int assentos)
+{
     passageiro r;
     // RR Euclides Simon 222.111.333-12 12 12 2024 V001 B01 economica 1200.00 CGH RAO
     // RR Marta Rocha 999.888.222-21 12 12 2024 V001 C02 executiva 2500.00 CGH RAO
     r.nome = leiaString();
     r.sobrenome = leiaString();
     r.cancelado = 0;
-    
-    
+
     scanf("%s %d %d %d %s %s %s %f %s %s",
-               r.CPF, &r.dia, &r.mes, &r.ano,
-               r.numVoo, r.assento, r.classe, &r.valor, r.origem, r.destino);
+        r.CPF, &r.dia, &r.mes, &r.ano,
+        r.numVoo, r.assento, r.classe, &r.valor, r.origem, r.destino);
     getchar();
 
-    if(assentos == -1){
+    if (assentos == -1) {
         printf("Nenhum voo aberto\n");
         return;
-    } else if(*n >= assentos){
+    } else if (*n >= assentos) {
         printf("Nenhum assento disponível\n");
         return;
     }
-    
+
     (*reservas)[(*n)++] = r;
 
-    if(*n%10 == 0){
-            *reservas = realloc(*reservas, (*n + 10) * sizeof(passageiro));
+    if (*n % 10 == 0) {
+        *reservas = realloc(*reservas, (*n + 10) * sizeof(passageiro));
     }
 
     (*numReservasDia)++;
 }
 
-void consultarReserva(passageiro *reservas, int n){
+void consultarReserva(passageiro* reservas, int n)
+{
     char cpf[20];
     scanf(" %s", cpf);
 
-    for (int i=0; i<n; i++){
+    for (int i = 0; i < n; i++) {
         passageiro r;
         r = reservas[i];
-        if (strcmp(r.CPF, cpf)==0){
+        if (strcmp(r.CPF, cpf) == 0) {
             printf("%s\n%s %s\n%d/%d/%d\nVoo: %s\nAssento: %s\nClasse: %s\nTrecho: %s %s\nValor: %0.2f\n", r.CPF, r.nome, r.sobrenome, r.dia, r.mes, r.ano, r.numVoo, r.assento, r.classe, r.origem, r.destino, r.valor);
             printf("--------------------------------------------------\n");
         }
     }
-
 }
 
-void modificarReserva(passageiro *reservas, int *n){
+void modificarReserva(passageiro* reservas, int* n)
+{
     // MR Marta Rocha 999.888.222-21 C03
     char CPFAntigo[20], *nome, *sobrenome, CPF[20], assento[10];
     nome = malloc(50 * sizeof(char));
@@ -276,46 +278,49 @@ void modificarReserva(passageiro *reservas, int *n){
     free(sobrenome);
 }
 
-void cancelarReserva(passageiro *reservas, int n){
+void cancelarReserva(passageiro* reservas, int n)
+{
     char cpf[20];
     scanf(" %s", cpf);
 
-    for (int i=0; i<n; i++){
-        if (strcmp(reservas[i].CPF, cpf)==0){
+    for (int i = 0; i < n; i++) {
+        if (strcmp(reservas[i].CPF, cpf) == 0) {
             reservas[i].cancelado = 1;
         }
     }
-
 }
 
-void fechamentoDia(passageiro *reservas, int *n, int numReservasDia){
-    
-    FILE *passageiros;
+void fechamentoDia(passageiro* reservas, int* n, int numReservasDia)
+{
+
+    FILE* passageiros;
     passageiros = fopen("passageiros.txt", "w");
 
     float posicao = 0;
 
-    for (int i = 0; i < *n; i++)
-    {   
-        if(reservas[i].cancelado){continue;}
+    for (int i = 0; i < *n; i++) {
+        if (reservas[i].cancelado) {
+            continue;
+        }
 
         posicao += reservas[i].valor;
         passageiro r = reservas[i];
         fprintf(passageiros, "%s %s %s %d %d %d %s %s %s %f %s %s\n", r.nome, r.sobrenome, r.CPF, r.dia, r.mes, r.ano, r.numVoo, r.assento, r.classe, r.valor, r.origem, r.destino);
     }
-    
+
     printf("Fechamento do dia:\n");
     printf("Quantidade de reservas: %d\n", numReservasDia);
     printf("Posição: %.2f\n", posicao);
     printf("--------------------------------------------------\n");
 }
 
-void fechamentoVoo(passageiro *reservas, int *n){
-    FILE *passageiros;
+void fechamentoVoo(passageiro* reservas, int* n)
+{
+    FILE* passageiros;
     passageiros = fopen("passageiros.txt", "w");
     fclose(passageiros);
 
-    FILE *voos;
+    FILE* voos;
     voos = fopen("voos.txt", "w");
     fclose(voos);
 
@@ -323,9 +328,10 @@ void fechamentoVoo(passageiro *reservas, int *n){
     passageiro r;
     float valorTotal = 0;
 
-    for (int i = 0; i < *n; i++)
-    {
-        if(reservas[i].cancelado){continue;}
+    for (int i = 0; i < *n; i++) {
+        if (reservas[i].cancelado) {
+            continue;
+        }
         r = reservas[i];
         printf("%s\n", r.CPF);
         printf("%s %s\n", r.nome, r.sobrenome);
@@ -334,12 +340,11 @@ void fechamentoVoo(passageiro *reservas, int *n){
     }
     printf("Valor Total: %0.2f\n", valorTotal);
     printf("--------------------------------------------------\n");
-    
 }
 
-void free_passageiros(passageiro *reservas, int n){
-    for (int i = 0; i < n; i++)
-    {
+void free_passageiros(passageiro* reservas, int n)
+{
+    for (int i = 0; i < n; i++) {
         free(reservas[i].nome);
         free(reservas[i].sobrenome);
     }
