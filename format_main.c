@@ -34,7 +34,6 @@ void cancelarReserva(passageiro* reservas, int n); // Done, Nicolas
 void fechamentoDia(passageiro* reservas, int* n, int numReservasDia); // DONE
 void fechamentoVoo(passageiro* reservas, int* n); // DONE
 void carregarReservas(passageiro** reservas, int* n); // DONE
-char* leiaString();
 void free_passageiros(passageiro* reservas, int n);
 
 int main(void)
@@ -142,24 +141,6 @@ int vooAberto()
     return assentos;
 }
 
-char* leiaString()
-{
-    char* buffer = malloc(1 * sizeof(char));
-    int size = 1, id = 0;
-    char ch;
-
-    while ((ch = getchar()) != ' ' && ch != EOF && ch != '\n') {
-        if (id == size - 1) {
-            size *= 2;
-            buffer = realloc(buffer, size * sizeof(char));
-        }
-        buffer[id++] = ch;
-    }
-    buffer[id] = '\0';
-
-    return buffer;
-}
-
 void carregarReservas(passageiro** reservas, int* n)
 {
 
@@ -173,7 +154,7 @@ void carregarReservas(passageiro** reservas, int* n)
     char* sobrenome = malloc(50 * sizeof(char));
 
     while (fgets(linha, 200, passageiros) != NULL) {
-        printf("%s", linha);
+        // printf("%s", linha);
         sscanf(linha, "%s %s %s %d %d %d %s %s %s %f %s %s",
             nome, sobrenome, r.CPF, &r.dia, &r.mes, &r.ano,
             r.numVoo, r.assento, r.classe, &r.valor, r.origem, r.destino);
@@ -202,12 +183,12 @@ void realizarReserva(passageiro** reservas, int* n, int* numReservasDia, int ass
     passageiro r;
     // RR Euclides Simon 222.111.333-12 12 12 2024 V001 B01 economica 1200.00 CGH RAO
     // RR Marta Rocha 999.888.222-21 12 12 2024 V001 C02 executiva 2500.00 CGH RAO
-    r.nome = leiaString();
-    r.sobrenome = leiaString();
+    r.nome = malloc(50 * sizeof(char));
+    r.sobrenome = malloc(50 * sizeof(char));
     r.cancelado = 0;
 
-    scanf("%s %d %d %d %s %s %s %f %s %s",
-        r.CPF, &r.dia, &r.mes, &r.ano,
+    scanf("%s %s %s %d %d %d %s %s %s %f %s %s",
+        r.nome, r.sobrenome, r.CPF, &r.dia, &r.mes, &r.ano,
         r.numVoo, r.assento, r.classe, &r.valor, r.origem, r.destino);
     getchar();
 
