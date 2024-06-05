@@ -115,7 +115,7 @@ void abrirVoo(int* numAssentos)
     float valorEcon;
     float valorExec;
 
-    scanf(" %d %f %f", &assentos, &valorEcon, &valorExec);
+    scanf("%d %f %f", &assentos, &valorEcon, &valorExec);
     getchar();
 
     fprintf(voos, "%d, %f, %f\n", assentos, valorEcon, valorExec);
@@ -127,18 +127,20 @@ void abrirVoo(int* numAssentos)
 
 int vooAberto()
 {
-    FILE* voos;
-    voos = fopen("voos.txt", "r");
-    char* voos_texto = malloc(50 * sizeof(char));
+    FILE* voos = fopen("voos.txt", "r");
+    char voos_texto[50];
     int assentos;
 
     if (fgets(voos_texto, 50, voos) == NULL) {
+        fclose(voos);
         return -1;
     }
 
     sscanf(voos_texto, "%d", &assentos);
-    free(voos_texto);
+    fclose(voos);
     return assentos;
+
+    // ERRO: Se fgets retorna NULL, ele não desaloca voos_texto. DONE
 }
 
 void carregarReservas(passageiro** reservas, int* n)
@@ -180,25 +182,6 @@ void carregarReservas(passageiro** reservas, int* n)
 
 void realizarReserva(passageiro** reservas, int* n, int* numReservasDia, int assentos)
 {
-    passageiro r;
-    // RR Euclides Simon 222.111.333-12 12 12 2024 V001 B01 economica 1200.00 CGH RAO
-    // RR Marta Rocha 999.888.222-21 12 12 2024 V001 C02 executiva 2500.00 CGH RAO
-
-    char* nome = malloc(50 * sizeof(char));
-    char* sobrenome = malloc(50 * sizeof(char));
-
-    scanf("%s %s %s %d %d %d %s %s %s %f %s %s",
-        nome, sobrenome, r.CPF, &r.dia, &r.mes, &r.ano,
-        r.numVoo, r.assento, r.classe, &r.valor, r.origem, r.destino);
-    getchar();
-
-    r.nome = malloc(strlen(nome) * sizeof(char)); // Talvez mudar isso no futuro
-    r.sobrenome = malloc(strlen(sobrenome) * sizeof(char)); // Talvez mudar isso no futuro
-    r.cancelado = 0;
-
-    strcpy(r.nome, nome);
-    strcpy(r.sobrenome, sobrenome);
-
     if (assentos == -1) {
         printf("Nenhum voo aberto\n");
         return;
@@ -206,6 +189,22 @@ void realizarReserva(passageiro** reservas, int* n, int* numReservasDia, int ass
         printf("Nenhum assento disponível\n");
         return;
     }
+    
+    passageiro r;
+    char nome[50];
+    char sobrenome[50];
+
+    scanf("%s %s %s %d %d %d %s %s %s %f %s %s",
+        nome, sobrenome, r.CPF, &r.dia, &r.mes, &r.ano,
+        r.numVoo, r.assento, r.classe, &r.valor, r.origem, r.destino);
+    getchar();
+
+    r.nome = malloc((strlen(nome) + 1) * sizeof(char));
+    r.sobrenome = malloc((strlen(sobrenome) + 1) * sizeof(char));
+    r.cancelado = 0;
+
+    strcpy(r.nome, nome);
+    strcpy(r.sobrenome, sobrenome);
 
     (*reservas)[(*n)++] = r;
 
@@ -214,9 +213,6 @@ void realizarReserva(passageiro** reservas, int* n, int* numReservasDia, int ass
     }
 
     (*numReservasDia)++;
-
-    free(nome);
-    free(sobrenome);
 }
 
 void consultarReserva(passageiro* reservas, int n)
@@ -315,7 +311,7 @@ void fechamentoVoo(passageiro* reservas, int* n)
     voos = fopen("voos.txt", "w");
     fclose(voos);
 
-    printf("Voo Fechado!\n\n\n");
+    printf("Voo Fechado!\n\n");
     passageiro r;
     float valorTotal = 0;
 
