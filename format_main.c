@@ -232,10 +232,7 @@ void consultarReserva(passageiro* reservas, int n)
 
 void modificarReserva(passageiro* reservas, int* n)
 {
-    // MR Marta Rocha 999.888.222-21 C03
-    char CPFAntigo[20], *nome, *sobrenome, CPF[20], assento[10];
-    nome = malloc(50 * sizeof(char));
-    sobrenome = malloc(50 * sizeof(char));
+    char CPFAntigo[20], nome[50], sobrenome[50], CPF[20], assento[10];
 
     scanf("%s %s %s %s %s", CPFAntigo, nome, sobrenome, CPF, assento);
     int idx = -1;
@@ -251,18 +248,18 @@ void modificarReserva(passageiro* reservas, int* n)
         }
     }
 
-    printf("Reserva Modificada:\n");
-    printf("%s\n", reservas[idx].CPF);
-    printf("%s %s\n", reservas[idx].nome, reservas[idx].sobrenome);
-    printf("%02d/%02d/%04d\n", reservas[idx].dia, reservas[idx].mes, reservas[idx].ano);
-    printf("Voo: %s\n", reservas[idx].numVoo);
-    printf("Assento: %s\n", reservas[idx].assento);
-    printf("Classe: %s\n", reservas[idx].classe);
-    printf("Trecho: %s %s\n", reservas[idx].origem, reservas[idx].destino);
-    printf("Valor: %.2f\n", reservas[idx].valor);
-    printf("--------------------------------------------------\n");
-    free(nome);
-    free(sobrenome);
+    if (idx != -1) {
+        printf("Reserva Modificada:\n");
+        printf("%s\n", reservas[idx].CPF);
+        printf("%s %s\n", reservas[idx].nome, reservas[idx].sobrenome);
+        printf("%02d/%02d/%04d\n", reservas[idx].dia, reservas[idx].mes, reservas[idx].ano);
+        printf("Voo: %s\n", reservas[idx].numVoo);
+        printf("Assento: %s\n", reservas[idx].assento);
+        printf("Classe: %s\n", reservas[idx].classe);
+        printf("Trecho: %s %s\n", reservas[idx].origem, reservas[idx].destino);
+        printf("Valor: %.2f\n", reservas[idx].valor);
+        printf("--------------------------------------------------\n");
+    }
 }
 
 void cancelarReserva(passageiro* reservas, int n)
