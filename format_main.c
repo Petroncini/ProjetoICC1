@@ -25,15 +25,15 @@ typedef struct {
 } passageiro;
 
 int encodeComand(char* comando);
-void abrirVoo(int* numAssentos); // DONE
+void abrirVoo(int* numAssentos);
 int vooAberto();
-void realizarReserva(passageiro** reservas, int* n, int* numReservasDia, int assentos); // DONE
-void consultarReserva(passageiro* reservas, int n); // Done, Nicolas
-void modificarReserva(passageiro* reservas, int* n); // TODO, Veiga
-void cancelarReserva(passageiro* reservas, int n); // Done, Nicolas
-void fechamentoDia(passageiro* reservas, int* n, int numReservasDia); // DONE
-void fechamentoVoo(passageiro* reservas, int* n); // DONE
-void carregarReservas(passageiro** reservas, int* n); // DONE
+void realizarReserva(passageiro** reservas, int* n, int* numReservasDia, int assentos);
+void consultarReserva(passageiro* reservas, int n);
+void modificarReserva(passageiro* reservas, int* n);
+void cancelarReserva(passageiro* reservas, int n);
+void fechamentoDia(passageiro* reservas, int* n, int numReservasDia);
+void fechamentoVoo(passageiro* reservas, int* n);
+void carregarReservas(passageiro** reservas, int* n);
 void free_passageiros(passageiro* reservas, int n);
 
 int main(void)
@@ -41,13 +41,13 @@ int main(void)
     char comando[3];
     int comandoEncoded = -1;
 
-    passageiro* reservas = malloc(10 * sizeof(passageiro)); // aqui tem que fazer um realloc mais dinamico, DONE
+    passageiro* reservas = malloc(10 * sizeof(passageiro));
+
     int numReservas = 0;
     int numReservasDia = 0;
 
     carregarReservas(&reservas, &numReservas);
-    int numAssentos;
-    numAssentos = vooAberto();
+    int numAssentos = vooAberto();
 
     do {
         scanf("%s", comando);
@@ -56,26 +56,27 @@ int main(void)
         comandoEncoded = encodeComand(comando);
 
         switch (comandoEncoded) {
-        case 0:
-            abrirVoo(&numAssentos);
-            break;
-        case 1:
-            realizarReserva(&reservas, &numReservas, &numReservasDia, numAssentos);
-            break;
-        case 2:
-            consultarReserva(reservas, numReservas);
-            break;
-        case 3:
-            modificarReserva(reservas, &numReservas);
-            break;
-        case 4:
-            cancelarReserva(reservas, numReservas);
-            break;
-        case 5:
-            fechamentoDia(reservas, &numReservas, numReservasDia);
-            break;
-        case 6:
-            fechamentoVoo(reservas, &numReservas);
+            case 0:
+                abrirVoo(&numAssentos);
+                break;
+            case 1:
+                realizarReserva(&reservas, &numReservas, &numReservasDia, numAssentos);
+                break;
+            case 2:
+                consultarReserva(reservas, numReservas);
+                break;
+            case 3:
+                modificarReserva(reservas, &numReservas);
+                break;
+            case 4:
+                cancelarReserva(reservas, numReservas);
+                break;
+            case 5:
+                fechamentoDia(reservas, &numReservas, numReservasDia);
+                break;
+            case 6:
+                fechamentoVoo(reservas, &numReservas);
+                break;
         }
     } while (comandoEncoded != 5 && comandoEncoded != 6);
 
@@ -108,8 +109,10 @@ int encodeComand(char* comando)
 
 void abrirVoo(int* numAssentos)
 {
-    FILE* voos;
-    voos = fopen("voos.txt", "w");
+    FILE* voos = fopen("voos.txt", "w");
+    if (!voos) {
+        return;
+    }
 
     int assentos;
     float valorEcon;
@@ -128,45 +131,42 @@ void abrirVoo(int* numAssentos)
 int vooAberto()
 {
     FILE* voos = fopen("voos.txt", "r");
-    char voos_texto[50];
-    int assentos;
-
-    if (fgets(voos_texto, 50, voos) == NULL) {
-        fclose(voos);
+    if (!voos) {
         return -1;
     }
 
-    sscanf(voos_texto, "%d", &assentos);
+    int assentos;
+    fscanf(voos, "%d", &assentos);
+    
     fclose(voos);
     return assentos;
 
-    // ERRO: Se fgets retorna NULL, ele não desaloca voos_texto. DONE
+    // Mudei bastante da dessa parte
 }
 
 void carregarReservas(passageiro** reservas, int* n)
 {
+    FILE* passageiros = fopen("passageiros.txt", "r");
+    if (!passageiros) {
+        return;
+    }
 
-    FILE* passageiros;
-    passageiros = fopen("passageiros.txt", "r");
+    char linha[200];
 
-    passageiro r;
-    char* linha = malloc(200 * sizeof(char));
-
-    char* nome = malloc(50 * sizeof(char));
-    char* sobrenome = malloc(50 * sizeof(char));
-
-    while (fgets(linha, 200, passageiros) != NULL) {
-        // printf("%s", linha);
+    while (fgets(linha, sizeof(linha), passageiros) != NULL) {
+        passageiro r;
+        char nome[50], sobrenome[50];
+        
         sscanf(linha, "%s %s %s %d %d %d %s %s %s %f %s %s",
             nome, sobrenome, r.CPF, &r.dia, &r.mes, &r.ano,
             r.numVoo, r.assento, r.classe, &r.valor, r.origem, r.destino);
 
-        r.nome = malloc(strlen(nome) * sizeof(char));
-        r.sobrenome = malloc(strlen(sobrenome) * sizeof(char));
+        r.nome = malloc((strlen(nome) + 1) * sizeof(char));
+        r.sobrenome = malloc((strlen(sobrenome) + 1) * sizeof(char));
         r.cancelado = 0;
 
         strcpy(r.nome, nome);
-        strcpy(r.sobrenome, sobrenome);
+        strcpy(r.sobrenome, sobrenome); // Pode usar strdup também!!!
 
         (*reservas)[(*n)++] = r;
 
@@ -174,9 +174,6 @@ void carregarReservas(passageiro** reservas, int* n)
             *reservas = realloc(*reservas, (*n + 10) * sizeof(passageiro));
         }
     }
-    free(linha);
-    free(nome);
-    free(sobrenome);
     fclose(passageiros);
 }
 
@@ -191,8 +188,7 @@ void realizarReserva(passageiro** reservas, int* n, int* numReservasDia, int ass
     }
     
     passageiro r;
-    char nome[50];
-    char sobrenome[50];
+    char nome[50], sobrenome[50];
 
     scanf("%s %s %s %d %d %d %s %s %s %f %s %s",
         nome, sobrenome, r.CPF, &r.dia, &r.mes, &r.ano,
@@ -204,7 +200,7 @@ void realizarReserva(passageiro** reservas, int* n, int* numReservasDia, int ass
     r.cancelado = 0;
 
     strcpy(r.nome, nome);
-    strcpy(r.sobrenome, sobrenome);
+    strcpy(r.sobrenome, sobrenome); // Da pra usar strdup!!!
 
     (*reservas)[(*n)++] = r;
 
@@ -224,7 +220,8 @@ void consultarReserva(passageiro* reservas, int n)
         passageiro r;
         r = reservas[i];
         if (strcmp(r.CPF, cpf) == 0) {
-            printf("%s\n%s %s\n%d/%d/%d\nVoo: %s\nAssento: %s\nClasse: %s\nTrecho: %s %s\nValor: %0.2f\n", r.CPF, r.nome, r.sobrenome, r.dia, r.mes, r.ano, r.numVoo, r.assento, r.classe, r.origem, r.destino, r.valor);
+            printf("%s\n%s %s\n%d/%d/%d\nVoo: %s\nAssento: %s\nClasse: %s\nTrecho: %s %s\nValor: %0.2f\n", 
+                r.CPF, r.nome, r.sobrenome, r.dia, r.mes, r.ano, r.numVoo, r.assento, r.classe, r.origem, r.destino, r.valor);
             printf("--------------------------------------------------\n");
         }
     }
@@ -235,30 +232,32 @@ void modificarReserva(passageiro* reservas, int* n)
     char CPFAntigo[20], nome[50], sobrenome[50], CPF[20], assento[10];
 
     scanf("%s %s %s %s %s", CPFAntigo, nome, sobrenome, CPF, assento);
-    int idx = -1;
 
     for (int i = 0; i < *n; i++) {
         if (!strcmp(CPFAntigo, reservas[i].CPF)) {
-            idx = i;
+            free(reservas[i].nome);
+            free(reservas[i].sobrenome);
+            
+            reservas[i].nome = malloc((strlen(nome) + 1) * sizeof(char));
+            reservas[i].sobrenome = malloc((strlen(sobrenome) + 1) * sizeof(char));
+
             strcpy(reservas[i].nome, nome);
             strcpy(reservas[i].sobrenome, sobrenome);
             strcpy(reservas[i].CPF, CPF);
             strcpy(reservas[i].assento, assento);
-            break;
+            
+            printf("Reserva Modificada:\n");
+            printf("%s\n", reservas[i].CPF);
+            printf("%s %s\n", reservas[i].nome, reservas[i].sobrenome);
+            printf("%02d/%02d/%04d\n", reservas[i].dia, reservas[i].mes, reservas[i].ano);
+            printf("Voo: %s\n", reservas[i].numVoo);
+            printf("Assento: %s\n", reservas[i].assento);
+            printf("Classe: %s\n", reservas[i].classe);
+            printf("Trecho: %s %s\n", reservas[i].origem, reservas[i].destino);
+            printf("Valor: %.2f\n", reservas[i].valor);
+            printf("--------------------------------------------------\n");
+            return;   
         }
-    }
-
-    if (idx != -1) {
-        printf("Reserva Modificada:\n");
-        printf("%s\n", reservas[idx].CPF);
-        printf("%s %s\n", reservas[idx].nome, reservas[idx].sobrenome);
-        printf("%02d/%02d/%04d\n", reservas[idx].dia, reservas[idx].mes, reservas[idx].ano);
-        printf("Voo: %s\n", reservas[idx].numVoo);
-        printf("Assento: %s\n", reservas[idx].assento);
-        printf("Classe: %s\n", reservas[idx].classe);
-        printf("Trecho: %s %s\n", reservas[idx].origem, reservas[idx].destino);
-        printf("Valor: %.2f\n", reservas[idx].valor);
-        printf("--------------------------------------------------\n");
     }
 }
 
@@ -268,7 +267,7 @@ void cancelarReserva(passageiro* reservas, int n)
     scanf(" %s", cpf);
 
     for (int i = 0; i < n; i++) {
-        if (strcmp(reservas[i].CPF, cpf) == 0) {
+        if (!strcmp(reservas[i].CPF, cpf)) {
             reservas[i].cancelado = 1;
         }
     }
@@ -276,10 +275,7 @@ void cancelarReserva(passageiro* reservas, int n)
 
 void fechamentoDia(passageiro* reservas, int* n, int numReservasDia)
 {
-
-    FILE* passageiros;
-    passageiros = fopen("passageiros.txt", "w");
-
+    FILE* passageiros = fopen("passageiros.txt", "w");
     float posicao = 0;
 
     for (int i = 0; i < *n; i++) {
@@ -289,8 +285,11 @@ void fechamentoDia(passageiro* reservas, int* n, int numReservasDia)
 
         posicao += reservas[i].valor;
         passageiro r = reservas[i];
-        fprintf(passageiros, "%s %s %s %d %d %d %s %s %s %f %s %s\n", r.nome, r.sobrenome, r.CPF, r.dia, r.mes, r.ano, r.numVoo, r.assento, r.classe, r.valor, r.origem, r.destino);
+        fprintf(passageiros, "%s %s %s %d %d %d %s %s %s %f %s %s\n",
+            r.nome, r.sobrenome, r.CPF, r.dia, r.mes, r.ano, r.numVoo, r.assento, r.classe, r.valor, r.origem, r.destino);
     }
+
+    fclose(passageiros);
 
     printf("Fechamento do dia:\n");
     printf("Quantidade de reservas: %d\n", numReservasDia);
@@ -300,13 +299,15 @@ void fechamentoDia(passageiro* reservas, int* n, int numReservasDia)
 
 void fechamentoVoo(passageiro* reservas, int* n)
 {
-    FILE* passageiros;
-    passageiros = fopen("passageiros.txt", "w");
-    fclose(passageiros);
+    FILE* passageiros = fopen("passageiros.txt", "w");
+    if (passageiros) {
+        fclose(passageiros);
+    }
 
-    FILE* voos;
-    voos = fopen("voos.txt", "w");
-    fclose(voos);
+    FILE* voos = fopen("voos.txt", "w");
+    if (voos) {
+        fclose(passageiros);
+    }
 
     printf("Voo Fechado!\n\n");
     passageiro r;
