@@ -159,8 +159,8 @@ void carregarReservas(passageiro** reservas, int* n)
             nome, sobrenome, r.CPF, &r.dia, &r.mes, &r.ano,
             r.numVoo, r.assento, r.classe, &r.valor, r.origem, r.destino);
 
-        r.nome = malloc(strlen(nome));
-        r.sobrenome = malloc(strlen(sobrenome));
+        r.nome = malloc(strlen(nome) * sizeof(char));
+        r.sobrenome = malloc(strlen(sobrenome) * sizeof(char));
         r.cancelado = 0;
 
         strcpy(r.nome, nome);
@@ -183,14 +183,21 @@ void realizarReserva(passageiro** reservas, int* n, int* numReservasDia, int ass
     passageiro r;
     // RR Euclides Simon 222.111.333-12 12 12 2024 V001 B01 economica 1200.00 CGH RAO
     // RR Marta Rocha 999.888.222-21 12 12 2024 V001 C02 executiva 2500.00 CGH RAO
-    r.nome = malloc(50 * sizeof(char));
-    r.sobrenome = malloc(50 * sizeof(char));
-    r.cancelado = 0;
+
+    char* nome = malloc(50 * sizeof(char));
+    char* sobrenome = malloc(50 * sizeof(char));
 
     scanf("%s %s %s %d %d %d %s %s %s %f %s %s",
-        r.nome, r.sobrenome, r.CPF, &r.dia, &r.mes, &r.ano,
+        nome, sobrenome, r.CPF, &r.dia, &r.mes, &r.ano,
         r.numVoo, r.assento, r.classe, &r.valor, r.origem, r.destino);
     getchar();
+
+    r.nome = malloc(strlen(nome) * sizeof(char)); // Talvez mudar isso no futuro
+    r.sobrenome = malloc(strlen(sobrenome) * sizeof(char)); // Talvez mudar isso no futuro
+    r.cancelado = 0;
+
+    strcpy(r.nome, nome);
+    strcpy(r.sobrenome, sobrenome);
 
     if (assentos == -1) {
         printf("Nenhum voo aberto\n");
@@ -207,6 +214,9 @@ void realizarReserva(passageiro** reservas, int* n, int* numReservasDia, int ass
     }
 
     (*numReservasDia)++;
+
+    free(nome);
+    free(sobrenome);
 }
 
 void consultarReserva(passageiro* reservas, int n)
