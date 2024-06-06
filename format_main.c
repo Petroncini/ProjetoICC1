@@ -133,7 +133,7 @@ int vooAberto()
     FILE* voos = fopen("voos.txt", "r");
     if (!voos) {
         return -1;
-    }
+    } // talvez tratar isso diferente
 
     int assentos;
     fscanf(voos, "%d", &assentos);
@@ -141,7 +141,7 @@ int vooAberto()
     fclose(voos);
     return assentos;
 
-    // Mudei bastante da dessa parte
+    // mudei bastante da dessa parte
 }
 
 void carregarReservas(passageiro** reservas, int* n)
