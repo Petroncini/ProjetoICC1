@@ -56,27 +56,27 @@ int main(void)
         comandoEncoded = encodeComand(comando);
 
         switch (comandoEncoded) {
-            case 0:
-                abrirVoo(&numAssentos);
-                break;
-            case 1:
-                realizarReserva(&reservas, &numReservas, &numReservasDia, numAssentos);
-                break;
-            case 2:
-                consultarReserva(reservas, numReservas);
-                break;
-            case 3:
-                modificarReserva(reservas, &numReservas);
-                break;
-            case 4:
-                cancelarReserva(reservas, numReservas);
-                break;
-            case 5:
-                fechamentoDia(reservas, &numReservas, numReservasDia);
-                break;
-            case 6:
-                fechamentoVoo(reservas, &numReservas);
-                break;
+        case 0:
+            abrirVoo(&numAssentos);
+            break;
+        case 1:
+            realizarReserva(&reservas, &numReservas, &numReservasDia, numAssentos);
+            break;
+        case 2:
+            consultarReserva(reservas, numReservas);
+            break;
+        case 3:
+            modificarReserva(reservas, &numReservas);
+            break;
+        case 4:
+            cancelarReserva(reservas, numReservas);
+            break;
+        case 5:
+            fechamentoDia(reservas, &numReservas, numReservasDia);
+            break;
+        case 6:
+            fechamentoVoo(reservas, &numReservas);
+            break;
         }
     } while (comandoEncoded != 5 && comandoEncoded != 6);
 
@@ -139,7 +139,7 @@ int vooAberto()
 
     int assentos;
     fscanf(voos, "%d", &assentos);
-    
+
     fclose(voos);
     return assentos;
 
@@ -159,7 +159,7 @@ void carregarReservas(passageiro** reservas, int* n)
     while (fgets(linha, sizeof(linha), passageiros) != NULL) {
         passageiro r;
         char nome[50], sobrenome[50];
-        
+
         sscanf(linha, "%s %s %s %d %d %d %s %s %s %f %s %s",
             nome, sobrenome, r.CPF, &r.dia, &r.mes, &r.ano,
             r.numVoo, r.assento, r.classe, &r.valor, r.origem, r.destino);
@@ -189,7 +189,7 @@ void realizarReserva(passageiro** reservas, int* n, int* numReservasDia, int ass
         printf("Nenhum assento disponível\n");
         return;
     }
-    
+
     passageiro r;
     char nome[50], sobrenome[50];
 
@@ -223,7 +223,7 @@ void consultarReserva(passageiro* reservas, int n)
         passageiro r;
         r = reservas[i];
         if (strcmp(r.CPF, cpf) == 0) {
-            printf("%s\n%s %s\n%d/%d/%d\nVoo: %s\nAssento: %s\nClasse: %s\nTrecho: %s %s\nValor: %0.2f\n", 
+            printf("%s\n%s %s\n%d/%d/%d\nVoo: %s\nAssento: %s\nClasse: %s\nTrecho: %s %s\nValor: %0.2f\n",
                 r.CPF, r.nome, r.sobrenome, r.dia, r.mes, r.ano, r.numVoo, r.assento, r.classe, r.origem, r.destino, r.valor);
             printf("--------------------------------------------------\n");
         }
@@ -240,7 +240,7 @@ void modificarReserva(passageiro* reservas, int* n)
         if (!strcmp(CPFAntigo, reservas[i].CPF)) {
             free(reservas[i].nome);
             free(reservas[i].sobrenome);
-            
+
             reservas[i].nome = malloc((strlen(nome) + 1) * sizeof(char));
             reservas[i].sobrenome = malloc((strlen(sobrenome) + 1) * sizeof(char));
 
@@ -248,7 +248,7 @@ void modificarReserva(passageiro* reservas, int* n)
             strcpy(reservas[i].sobrenome, sobrenome);
             strcpy(reservas[i].CPF, CPF);
             strcpy(reservas[i].assento, assento);
-            
+
             printf("Reserva Modificada:\n");
             printf("%s\n", reservas[i].CPF);
             printf("%s %s\n", reservas[i].nome, reservas[i].sobrenome);
@@ -259,7 +259,7 @@ void modificarReserva(passageiro* reservas, int* n)
             printf("Trecho: %s %s\n", reservas[i].origem, reservas[i].destino);
             printf("Valor: %.2f\n", reservas[i].valor);
             printf("--------------------------------------------------\n");
-            return;   
+            return;
         }
     }
 }
