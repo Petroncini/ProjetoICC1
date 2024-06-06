@@ -111,7 +111,8 @@ void abrirVoo(int* numAssentos)
 {
     FILE* voos = fopen("voos.txt", "w");
     if (!voos) {
-        return;
+        printf("Erro na abertura do arquivo voos.txt!\n");
+        exit(1);
     }
 
     int assentos;
@@ -132,8 +133,9 @@ int vooAberto()
 {
     FILE* voos = fopen("voos.txt", "r");
     if (!voos) {
-        return -1;
-    } // talvez tratar isso diferente
+        printf("Erro na abertura do arquivo voos.txt!\n");
+        exit(1);
+    }
 
     int assentos;
     fscanf(voos, "%d", &assentos);
@@ -148,7 +150,8 @@ void carregarReservas(passageiro** reservas, int* n)
 {
     FILE* passageiros = fopen("passageiros.txt", "r");
     if (!passageiros) {
-        return;
+        printf("Erro na abertura do arquivo passageiros.txt!\n");
+        exit(1);
     }
 
     char linha[200];
@@ -276,6 +279,11 @@ void cancelarReserva(passageiro* reservas, int n)
 void fechamentoDia(passageiro* reservas, int* n, int numReservasDia)
 {
     FILE* passageiros = fopen("passageiros.txt", "w");
+    if (!passageiros) {
+        printf("Erro na abertura do arquivo passageiros.txt!\n");
+        exit(1);
+    }
+
     float posicao = 0;
 
     for (int i = 0; i < *n; i++) {
@@ -300,14 +308,18 @@ void fechamentoDia(passageiro* reservas, int* n, int numReservasDia)
 void fechamentoVoo(passageiro* reservas, int* n)
 {
     FILE* passageiros = fopen("passageiros.txt", "w");
-    if (passageiros) {
-        fclose(passageiros);
+    if (!passageiros) {
+        printf("Erro na abertura do arquivo passageiros.txt!\n");
+        exit(1);
     }
+    fclose(passageiros);
 
     FILE* voos = fopen("voos.txt", "w");
-    if (voos) {
-        fclose(voos);
+    if (!voos) {
+        printf("Erro na abertura do arquivo voos.txt!\n");
+        exit(1);
     }
+    fclose(voos);
 
     printf("Voo Fechado!\n\n");
     passageiro r;
