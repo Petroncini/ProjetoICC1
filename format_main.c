@@ -306,7 +306,7 @@ void fechamentoVoo(passageiro* reservas, int* n)
 
     FILE* voos = fopen("voos.txt", "w");
     if (voos) {
-        fclose(passageiros);
+        fclose(voos);
     }
 
     printf("Voo Fechado!\n\n");
