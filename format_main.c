@@ -216,14 +216,20 @@ void realizarReserva(passageiro** reservas, int* n, int* numReservasDia, int ass
 
 void consultarReserva(passageiro* reservas, int n)
 {
+    /***Essa função tem o objetivo de consultar a reserva do voo de um passageiro a partir do ceu CPF***/
+
+    /*Realizo a leitura do CPF*/
     char cpf[20];
     scanf(" %s", cpf);
 
+    /*Realizo um loop que busca todos os passageiros já cadastrados*/
     for (int i = 0; i < n; i++) {
         passageiro r;
         r = reservas[i];
-        if (strcmp(r.CPF, cpf) == 0) {
-            printf("%s\n%s %s\n%d/%d/%d\nVoo: %s\nAssento: %s\nClasse: %s\nTrecho: %s %s\nValor: %0.2f\n",
+        /*Verifico nesse if se o CPF cadastrado é o mesmo buscado, além de verificar se o passageiro já não cancelou seu voo*/
+        if (strcmp(r.CPF, cpf) == 0 && r.cancelado!=1) {
+            /*Escrevo a resposta esperada*/
+            printf("%s\n%s %s\n%d/%d/%d\nVoo: %s\nAssento: %s\nClasse: %s\nTrecho: %s %s\nValor: %0.2f\n", 
                 r.CPF, r.nome, r.sobrenome, r.dia, r.mes, r.ano, r.numVoo, r.assento, r.classe, r.origem, r.destino, r.valor);
             printf("--------------------------------------------------\n");
         }
@@ -266,11 +272,17 @@ void modificarReserva(passageiro* reservas, int* n)
 
 void cancelarReserva(passageiro* reservas, int n)
 {
+    /***Essa função tem o objetivo de cancelar a reserva do voo de um passageiro a partir do ceu CPF***/
+
+    /*Realizo a leitura do CPF*/
     char cpf[20];
     scanf(" %s", cpf);
 
+    /*Realizo um loop que busca todos os passageiros já cadastrados*/
     for (int i = 0; i < n; i++) {
+        /*Verifico nesse if se o CPF cadastrado é o mesmo buscado*/
         if (!strcmp(reservas[i].CPF, cpf)) {
+            /*Coloco o atributo de "cancelado" da pessoa para 1(True)*/
             reservas[i].cancelado = 1;
         }
     }
