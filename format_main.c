@@ -160,8 +160,6 @@ int vooAberto()
 
     fclose(voos);
     return assentos;
-
-    // mudei bastante da dessa parte
 }
 
 void carregarReservas(passageiro** reservas, int* n)
@@ -187,7 +185,7 @@ void carregarReservas(passageiro** reservas, int* n)
         r.cancelado = 0;
 
         strcpy(r.nome, nome);
-        strcpy(r.sobrenome, sobrenome); // Pode usar strdup também!!!
+        strcpy(r.sobrenome, sobrenome);
 
         (*reservas)[(*n)++] = r;
 
@@ -221,7 +219,7 @@ void realizarReserva(passageiro** reservas, int* n, int* numReservasDia, int ass
     r.cancelado = 0;
 
     strcpy(r.nome, nome);
-    strcpy(r.sobrenome, sobrenome); // Da pra usar strdup!!!
+    strcpy(r.sobrenome, sobrenome);
 
     (*reservas)[(*n)++] = r;
 
@@ -256,23 +254,31 @@ void consultarReserva(passageiro* reservas, int n)
 
 void modificarReserva(passageiro* reservas, int* n)
 {
-    char CPFAntigo[20], nome[50], sobrenome[50], CPF[20], assento[10];
+    /***Essa função tem o objetivo de modificar os dados de uma reserva já existente de algum dos passageiros***/
 
+    /*Leio o CPF antigo, para fazer a busca, e o nome, sobrenome, CPF e assento que podem ser modificados*/
+    char CPFAntigo[20], nome[50], sobrenome[50], CPF[20], assento[10];
     scanf("%s %s %s %s %s", CPFAntigo, nome, sobrenome, CPF, assento);
 
+    /*Faço um loop buscando o CPFAntigo na base de dados*/
     for (int i = 0; i < *n; i++) {
+        /*Encontra o CPFAntigo*/
         if (!strcmp(CPFAntigo, reservas[i].CPF)) {
+            /*Libera o espaço alocado dinamicamente para o antigo nome e sobrenome*/
             free(reservas[i].nome);
             free(reservas[i].sobrenome);
 
+            /*Aloca espaço na memória para o novo nome e sobrenome*/
             reservas[i].nome = malloc((strlen(nome) + 1) * sizeof(char));
             reservas[i].sobrenome = malloc((strlen(sobrenome) + 1) * sizeof(char));
 
+            /*Modifica os dados necessários do passageiro*/
             strcpy(reservas[i].nome, nome);
             strcpy(reservas[i].sobrenome, sobrenome);
             strcpy(reservas[i].CPF, CPF);
             strcpy(reservas[i].assento, assento);
 
+            /*Escreve para o usuário os novos dados do passageiro cujo a reserva foi modificada*/
             printf("Reserva Modificada:\n");
             printf("%s\n", reservas[i].CPF);
             printf("%s %s\n", reservas[i].nome, reservas[i].sobrenome);
