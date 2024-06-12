@@ -25,6 +25,7 @@ typedef struct {
 } passageiro;
 
 int encodeComand(char* comando);
+void criarArquivos();
 void abrirVoo(int* numAssentos);
 int vooAberto();
 void realizarReserva(passageiro** reservas, int* n, int* numReservasDia, int assentos);
@@ -45,6 +46,8 @@ int main(void)
 
     int numReservas = 0;
     int numReservasDia = 0;
+
+    criarArquivos();
 
     carregarReservas(&reservas, &numReservas);
     int numAssentos = vooAberto();
@@ -107,6 +110,23 @@ int encodeComand(char* comando)
     }
 }
 
+void criarArquivos()
+{
+    FILE *voos = fopen("voos.txt", "r");
+    FILE *passageiros = fopen("passageiros.txt", "r");
+
+    if(!voos) {
+        voos = fopen("voos.txt", "w");
+    }
+
+    if(!passageiros) {
+        passageiros = fopen("passageiros.txt", "w");
+    }
+
+    fclose(voos);
+    fclose(passageiros);
+}
+
 void abrirVoo(int* numAssentos)
 {
     FILE* voos = fopen("voos.txt", "w");
@@ -125,8 +145,6 @@ void abrirVoo(int* numAssentos)
     fprintf(voos, "%d, %f, %f\n", assentos, valorEcon, valorExec);
     fclose(voos);
     *numAssentos = assentos;
-    // hello, veiga
-    // hello, nicolas
 }
 
 int vooAberto()
@@ -319,19 +337,8 @@ void fechamentoDia(passageiro* reservas, int* n, int numReservasDia)
 
 void fechamentoVoo(passageiro* reservas, int* n)
 {
-    FILE* passageiros = fopen("passageiros.txt", "w");
-    if (!passageiros) {
-        printf("Erro na abertura do arquivo passageiros.txt!\n");
-        exit(1);
-    }
-    fclose(passageiros);
-
-    FILE* voos = fopen("voos.txt", "w");
-    if (!voos) {
-        printf("Erro na abertura do arquivo voos.txt!\n");
-        exit(1);
-    }
-    fclose(voos);
+    remove("voos.txt");
+    remove("passageiros.txt");
 
     printf("Voo Fechado!\n\n");
     passageiro r;
