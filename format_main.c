@@ -28,13 +28,13 @@ int encodeComand(char* comando);
 void criarArquivos();
 void abrirVoo(int* numAssentos);
 int vooAberto();
-void realizarReserva(passageiro** reservas, int* n, int* numReservasDia, int assentos);
+void realizarReserva(passageiro** reservas, int* n, int* numReservasDia, int assentos, int *numReservasVal);
 void consultarReserva(passageiro* reservas, int n);
 void modificarReserva(passageiro* reservas, int* n);
-void cancelarReserva(passageiro* reservas, int n);
+void cancelarReserva(passageiro* reservas, int n, int *numReservasVal);
 void fechamentoDia(passageiro* reservas, int* n, int numReservasDia);
 void fechamentoVoo(passageiro* reservas, int* n);
-void carregarReservas(passageiro** reservas, int* n);
+void carregarReservas(passageiro** reservas, int* n, int *numReservasVal);
 void free_passageiros(passageiro* reservas, int n);
 
 int main(void)
@@ -45,11 +45,12 @@ int main(void)
     passageiro* reservas = malloc(10 * sizeof(passageiro));
 
     int numReservas = 0;
+    int numReservasVal = 0;
     int numReservasDia = 0;
 
     criarArquivos();
 
-    carregarReservas(&reservas, &numReservas);
+    carregarReservas(&reservas, &numReservas, &numReservasVal);
     int numAssentos = vooAberto();
 
     do {
@@ -63,7 +64,7 @@ int main(void)
             abrirVoo(&numAssentos);
             break;
         case 1:
-            realizarReserva(&reservas, &numReservas, &numReservasDia, numAssentos);
+            realizarReserva(&reservas, &numReservas, &numReservasDia, numAssentos, &numReservasVal);
             break;
         case 2:
             consultarReserva(reservas, numReservas);
@@ -72,7 +73,7 @@ int main(void)
             modificarReserva(reservas, &numReservas);
             break;
         case 4:
-            cancelarReserva(reservas, numReservas);
+            cancelarReserva(reservas, numReservas, &numReservasVal);
             break;
         case 5:
             fechamentoDia(reservas, &numReservas, numReservasDia);
@@ -178,7 +179,7 @@ int vooAberto() // CAIO DPS OLHA ESSE
     return assentos;
 }
 
-void carregarReservas(passageiro** reservas, int* n) // CAIO DPS OLHA ESSE
+void carregarReservas(passageiro** reservas, int* n, int *numReservasVal) // CAIO DPS OLHA ESSE
 {
     FILE* passageiros = fopen("passageiros.txt", "r");
     if (!passageiros) {
@@ -204,6 +205,7 @@ void carregarReservas(passageiro** reservas, int* n) // CAIO DPS OLHA ESSE
         strcpy(r.sobrenome, sobrenome);
 
         (*reservas)[(*n)++] = r;
+        (*numReservasVal)++;
 
         if (*n % 10 == 0) {
             *reservas = realloc(*reservas, (*n + 10) * sizeof(passageiro));
@@ -212,7 +214,7 @@ void carregarReservas(passageiro** reservas, int* n) // CAIO DPS OLHA ESSE
     fclose(passageiros);
 }
 
-void realizarReserva(passageiro** reservas, int* n, int* numReservasDia, int assentos)
+void realizarReserva(passageiro** reservas, int* n, int* numReservasDia, int assentos, int *numReservasVal)
 {
     /***Essa função tem o objetivo de realizar a reserva de um novo passageiro***/
     
@@ -249,6 +251,8 @@ void realizarReserva(passageiro** reservas, int* n, int* numReservasDia, int ass
 
     /* Adiciona a reserva na base de dados e e aumenta o número total de reservas já feitas */
     (*reservas)[(*n)++] = r;
+
+    *(numReservasVal)++;
 
     /* Caso a capacidade do banco de dados tenha se esgotado, aloca dinamicamente mais 10 espaços */
     if (*n % 10 == 0) {
@@ -323,7 +327,7 @@ void modificarReserva(passageiro* reservas, int* n)
     }
 }
 
-void cancelarReserva(passageiro* reservas, int n)
+void cancelarReserva(passageiro* reservas, int n, int *numReservasVal)
 {
     /***Essa função tem o objetivo de cancelar a reserva do voo de um passageiro a partir do ceu CPF***/
 
@@ -337,6 +341,7 @@ void cancelarReserva(passageiro* reservas, int n)
         if (!strcmp(reservas[i].CPF, cpf)) {
             /* Coloca o atributo de "cancelado" da pessoa para 1(True) */
             reservas[i].cancelado = 1;
+            (*numReservasVal)--;
         }
     }
 }
