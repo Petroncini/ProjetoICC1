@@ -112,9 +112,13 @@ int encodeComand(char* comando)
 
 void criarArquivos()
 {
+    /***Essa função tem o objetivo de criar os arquivos necessários para o programa, caso eles ainda não existam***/
+    
+    /* Abre os arquivos voos.txt e passageiros.txt no modo "Read" */
     FILE *voos = fopen("voos.txt", "r");
     FILE *passageiros = fopen("passageiros.txt", "r");
 
+    /* Caso os arquivos não existam, cria eles abrindo-os no modo "Write" */
     if(!voos) {
         voos = fopen("voos.txt", "w");
     }
@@ -123,6 +127,7 @@ void criarArquivos()
         passageiros = fopen("passageiros.txt", "w");
     }
 
+    /* Fecha os arquivos */
     fclose(voos);
     fclose(passageiros);
 }
@@ -234,17 +239,17 @@ void consultarReserva(passageiro* reservas, int n)
 {
     /***Essa função tem o objetivo de consultar a reserva do voo de um passageiro a partir do ceu CPF***/
 
-    /*Realizo a leitura do CPF*/
+    /* Realiza a leitura do CPF */
     char cpf[20];
     scanf(" %s", cpf);
 
-    /*Realizo um loop que busca todos os passageiros já cadastrados*/
+    /* Realiza um loop que busca todos os passageiros já cadastrados */
     for (int i = 0; i < n; i++) {
         passageiro r;
         r = reservas[i];
-        /*Verifico nesse if se o CPF cadastrado é o mesmo buscado, além de verificar se o passageiro já não cancelou seu voo*/
+        /* Verifica nesse if se o CPF cadastrado é o mesmo buscado, além de verificar se o passageiro já não cancelou seu voo */
         if (strcmp(r.CPF, cpf) == 0 && r.cancelado!=1) {
-            /*Escrevo a resposta esperada*/
+            /* Escreve a resposta esperada */
             printf("%s\n%s %s\n%d/%d/%d\nVoo: %s\nAssento: %s\nClasse: %s\nTrecho: %s %s\nValor: %0.2f\n", 
                 r.CPF, r.nome, r.sobrenome, r.dia, r.mes, r.ano, r.numVoo, r.assento, r.classe, r.origem, r.destino, r.valor);
             printf("--------------------------------------------------\n");
@@ -256,23 +261,23 @@ void modificarReserva(passageiro* reservas, int* n)
 {
     /***Essa função tem o objetivo de modificar os dados de uma reserva já existente de algum dos passageiros***/
 
-    /*Leio o CPF antigo, para fazer a busca, e o nome, sobrenome, CPF e assento que podem ser modificados*/
+    /* Lê o CPF antigo, para fazer a busca, e o nome, sobrenome, CPF e assento que podem ser modificados */
     char CPFAntigo[20], nome[50], sobrenome[50], CPF[20], assento[10];
     scanf("%s %s %s %s %s", CPFAntigo, nome, sobrenome, CPF, assento);
 
-    /*Faço um loop buscando o CPFAntigo na base de dados*/
+    /* Faz um loop buscando o CPFAntigo na base de dados */
     for (int i = 0; i < *n; i++) {
-        /*Encontra o CPFAntigo*/
+        /* Encontra o CPFAntigo */
         if (!strcmp(CPFAntigo, reservas[i].CPF)) {
-            /*Libera o espaço alocado dinamicamente para o antigo nome e sobrenome*/
+            /* Libera o espaço alocado dinamicamente para o antigo nome e sobrenome */
             free(reservas[i].nome);
             free(reservas[i].sobrenome);
 
-            /*Aloca espaço na memória para o novo nome e sobrenome*/
+            /* Aloca espaço na memória para o novo nome e sobrenome */
             reservas[i].nome = malloc((strlen(nome) + 1) * sizeof(char));
             reservas[i].sobrenome = malloc((strlen(sobrenome) + 1) * sizeof(char));
 
-            /*Modifica os dados necessários do passageiro*/
+            /* Modifica os dados necessários do passageiro */
             strcpy(reservas[i].nome, nome);
             strcpy(reservas[i].sobrenome, sobrenome);
             strcpy(reservas[i].CPF, CPF);
@@ -298,15 +303,15 @@ void cancelarReserva(passageiro* reservas, int n)
 {
     /***Essa função tem o objetivo de cancelar a reserva do voo de um passageiro a partir do ceu CPF***/
 
-    /*Realizo a leitura do CPF*/
+    /* Realiza a leitura do CPF */
     char cpf[20];
     scanf(" %s", cpf);
 
-    /*Realizo um loop que busca todos os passageiros já cadastrados*/
+    /* Realiza um loop que busca todos os passageiros já cadastrados */
     for (int i = 0; i < n; i++) {
-        /*Verifico nesse if se o CPF cadastrado é o mesmo buscado*/
+        /* Verifica nesse if se o CPF cadastrado é o mesmo buscado */
         if (!strcmp(reservas[i].CPF, cpf)) {
-            /*Coloco o atributo de "cancelado" da pessoa para 1(True)*/
+            /* Coloca o atributo de "cancelado" da pessoa para 1(True) */
             reservas[i].cancelado = 1;
         }
     }
