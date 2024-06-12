@@ -134,40 +134,51 @@ void criarArquivos()
 
 void abrirVoo(int* numAssentos)
 {
+    /***Essa função tem o objetivo de abrir o Voo, o que acontecerá somente uma vez durante a execução do programa***/
+    
+    /* Abre o arquivo voos.txt no modo "Write" */
     FILE* voos = fopen("voos.txt", "w");
     if (!voos) {
         printf("Erro na abertura do arquivo voos.txt!\n");
         exit(1);
     }
 
+    /* Lê as informações básicas do Voo */
     int assentos;
-    float valorEcon;
-    float valorExec;
-
+    float valorEcon, valorExec;
     scanf("%d %f %f", &assentos, &valorEcon, &valorExec);
-    getchar();
+    getchar(); /* consome char \n */
 
+    /* Manda as informações lidas pelo input para o arquivo voos.txt */
     fprintf(voos, "%d, %f, %f\n", assentos, valorEcon, valorExec);
+
+    /* Fecha o arquivo voos.txt */
     fclose(voos);
     *numAssentos = assentos;
 }
 
-int vooAberto()
+int vooAberto() // CAIO DPS OLHA ESSE
 {
+    /***Essa função tem o objetivo de obter as informações do Voo para todas as execuções***/ 
+    /***do programa após a abertura do Voo, que acontece somente na primeira execução***/
+    
+    /* Abre o arquivo voos.txt no modo "Read" */
     FILE* voos = fopen("voos.txt", "r");
     if (!voos) {
         printf("Erro na abertura do arquivo voos.txt!\n");
         exit(1);
     }
 
+    /* Obtem a informação sobre o numero de assentos */
     int assentos;
     fscanf(voos, "%d", &assentos);
 
+    /* Fecha o arquivo voos.txt e retorna o int assentos */
     fclose(voos);
     return assentos;
 }
 
-void carregarReservas(passageiro** reservas, int* n)
+void carregarReservas(passageiro** reservas, int* n) // CAIO DPS OLHA ESSE
 {
     FILE* passageiros = fopen("passageiros.txt", "r");
     if (!passageiros) {
@@ -203,35 +214,48 @@ void carregarReservas(passageiro** reservas, int* n)
 
 void realizarReserva(passageiro** reservas, int* n, int* numReservasDia, int assentos)
 {
+    /***Essa função tem o objetivo de realizar a reserva de um novo passageiro***/
+    
+    /* Se o Voo ainda não foi aberto, retorna um erro */
     if (assentos == -1) {
         printf("Nenhum voo aberto\n");
         return;
-    } else if (*n >= assentos) {
+    } 
+    /* Se o todos os assentos já estão ocupados, retorna um erro */
+    if (*n >= assentos) {
         printf("Nenhum assento disponível\n");
         return;
     }
 
+    /* declara variáveis para auxiliar na leitura da reserva */
     passageiro r;
     char nome[50], sobrenome[50];
 
+    /* Lê todas as informações da reserva do passageiro r */
     scanf("%s %s %s %d %d %d %s %s %s %f %s %s",
         nome, sobrenome, r.CPF, &r.dia, &r.mes, &r.ano,
         r.numVoo, r.assento, r.classe, &r.valor, r.origem, r.destino);
-    getchar();
+    getchar(); /* consome char \n */
 
+    /* Aloca dinamicamente o nome e sobrenome do passageiro */
     r.nome = malloc((strlen(nome) + 1) * sizeof(char));
     r.sobrenome = malloc((strlen(sobrenome) + 1) * sizeof(char));
+    /* Coloca como 0(False) o status "cancelado" da reserva */
     r.cancelado = 0;
 
+    /* Copia nome e sobrenome para o struct passageiro */
     strcpy(r.nome, nome);
     strcpy(r.sobrenome, sobrenome);
 
+    /* Adiciona a reserva na base de dados e e aumenta o número total de reservas já feitas */
     (*reservas)[(*n)++] = r;
 
+    /* Caso a capacidade do banco de dados tenha se esgotado, aloca dinamicamente mais 10 espaços */
     if (*n % 10 == 0) {
         *reservas = realloc(*reservas, (*n + 10) * sizeof(passageiro));
     }
 
+    /* Atualiza o número de reservas feitas no dia */
     (*numReservasDia)++;
 }
 
