@@ -250,6 +250,15 @@ void realizarReserva(passageiro** reservas, int* n, int assentos, int* numReserv
     }
 }
 
+/*
+Consulta a reserva de um passageiro a partir de seu cpf.
+
+Funcionamento: Lê o cpf. Depois percorre o vetor de reservas, verificando se o
+cpf é o mesmo do buscado. Caso seja, escreve os dados do passageiro.
+
+@param *reservas: Array de reservas já realizadas.
+@param n: Número total de reservas realizadas.
+*/
 void consultarReserva(passageiro* reservas, int n)
 {
     char cpf[20];
@@ -303,6 +312,16 @@ void modificarReserva(passageiro* reservas, int* n)
     }
 }
 
+/*
+Cancela a reserva de um passageiro a partir de seu cpf.
+
+Funcionamento: Lê o cpf. Depois percorre o vetor de reservas, verificando se o
+cpf é o mesmo do buscado. Caso seja, muda o atributo "cacelado" do passageiro
+para 1, depois, dim
+
+@param *reservas: Array de reservas já realizadas.
+@param n: Número total de reservas realizadas.
+*/
 void cancelarReserva(passageiro* reservas, int* n, int* numReservasVal)
 {
     char cpf[20];
