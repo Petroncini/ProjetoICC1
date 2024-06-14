@@ -3,12 +3,6 @@
 #include <string.h>
 
 typedef struct {
-    int assentos;
-    float valorEcon;
-    float valorExec;
-} voo;
-
-typedef struct {
     char* nome;
     char* sobrenome;
     char CPF[20];
