@@ -28,13 +28,13 @@ int encodeComand(char* comando);
 void criarArquivos();
 void abrirVoo(int* numAssentos);
 int vooAberto();
-void realizarReserva(passageiro** reservas, int* n, int assentos, int *numReservasVal);
+void realizarReserva(passageiro** reservas, int* n, int assentos, int* numReservasVal);
 void consultarReserva(passageiro* reservas, int n);
 void modificarReserva(passageiro* reservas, int* n);
-void cancelarReserva(passageiro* reservas, int *n, int *numReservasVal);
+void cancelarReserva(passageiro* reservas, int* n, int* numReservasVal);
 void fechamentoDia(passageiro* reservas, int* n, int numReservas);
 void fechamentoVoo(passageiro* reservas, int* n);
-void carregarReservas(passageiro** reservas, int* n, int *numReservasVal);
+void carregarReservas(passageiro** reservas, int* n, int* numReservasVal);
 int verificarVoo();
 void free_passageiros(passageiro* reservas, int n);
 
@@ -121,17 +121,17 @@ int encodeComand(char* comando)
 void criarArquivos()
 {
     /***Essa função tem o objetivo de criar os arquivos necessários para o programa, caso eles ainda não existam***/
-    
+
     /* Abre os arquivos voos.txt e passageiros.txt no modo "Read" */
-    FILE *voos = fopen("voos.txt", "r");
-    FILE *passageiros = fopen("passageiros.txt", "r");
+    FILE* voos = fopen("voos.txt", "r");
+    FILE* passageiros = fopen("passageiros.txt", "r");
 
     /* Caso os arquivos não existam, cria eles abrindo-os no modo "Write" */
-    if(!voos) {
+    if (!voos) {
         voos = fopen("voos.txt", "w");
     }
 
-    if(!passageiros) {
+    if (!passageiros) {
         passageiros = fopen("passageiros.txt", "w");
     }
 
@@ -143,7 +143,7 @@ void criarArquivos()
 void abrirVoo(int* numAssentos)
 {
     /***Essa função tem o objetivo de abrir o Voo, o que acontecerá somente uma vez durante a execução do programa***/
-    
+
     FILE* voos = fopen("voos.txt", "w");
     if (!voos) {
         printf("Erro na abertura do arquivo voos.txt!\n");
@@ -185,7 +185,7 @@ int vooAberto()
     return assentos;
 }
 
-void carregarReservas(passageiro** reservas, int* n, int *numReservasVal) 
+void carregarReservas(passageiro** reservas, int* n, int* numReservasVal)
 {
     FILE* passageiros = fopen("passageiros.txt", "r");
     if (!passageiros) {
@@ -220,17 +220,16 @@ void carregarReservas(passageiro** reservas, int* n, int *numReservasVal)
     fclose(passageiros);
 }
 
-void realizarReserva(passageiro** reservas, int* n, int assentos, int *numReservasVal)
+void realizarReserva(passageiro** reservas, int* n, int assentos, int* numReservasVal)
 {
     /***Essa função tem o objetivo de realizar a reserva de um novo passageiro***/
-    
+
     /* Se o Voo ainda não foi aberto, retorna um erro */
     if (assentos == -1) {
         printf("Nenhum voo aberto\n");
         printf("--------------------------------------------------\n");
         return;
-    } 
-    
+    }
 
     /* declara variáveis para auxiliar na leitura da reserva */
     passageiro r;
@@ -242,7 +241,7 @@ void realizarReserva(passageiro** reservas, int* n, int assentos, int *numReserv
         r.numVoo, r.assento, r.classe, &r.valor, r.origem, r.destino);
     getchar(); /* consome char \n */
 
-    if(verificarVoo()){
+    if (verificarVoo()) {
         return;
     }
 
@@ -286,9 +285,9 @@ void consultarReserva(passageiro* reservas, int n)
         passageiro r;
         r = reservas[i];
         /* Verifica nesse if se o CPF cadastrado é o mesmo buscado, além de verificar se o passageiro já não cancelou seu voo */
-        if (strcmp(r.CPF, cpf) == 0 && r.cancelado!=1) {
+        if (strcmp(r.CPF, cpf) == 0 && r.cancelado != 1) {
             /* Escreve a resposta esperada */
-            printf("%s\n%s %s\n%d/%d/%d\nVoo: %s\nAssento: %s\nClasse: %s\nTrecho: %s %s\nValor: %0.2f\n", 
+            printf("%s\n%s %s\n%d/%d/%d\nVoo: %s\nAssento: %s\nClasse: %s\nTrecho: %s %s\nValor: %0.2f\n",
                 r.CPF, r.nome, r.sobrenome, r.dia, r.mes, r.ano, r.numVoo, r.assento, r.classe, r.origem, r.destino, r.valor);
             printf("--------------------------------------------------\n");
         }
@@ -303,7 +302,7 @@ void modificarReserva(passageiro* reservas, int* n)
     char CPFAntigo[20], nome[50], sobrenome[50], CPF[20], assento[10];
     scanf("%s %s %s %s %s", CPFAntigo, nome, sobrenome, CPF, assento);
 
-    if(verificarVoo()){
+    if (verificarVoo()) {
         return;
     }
 
@@ -341,7 +340,7 @@ void modificarReserva(passageiro* reservas, int* n)
     }
 }
 
-void cancelarReserva(passageiro* reservas, int *n, int *numReservasVal)
+void cancelarReserva(passageiro* reservas, int* n, int* numReservasVal)
 {
     /***Essa função tem o objetivo de cancelar a reserva do voo de um passageiro a partir do ceu CPF***/
 
@@ -349,7 +348,7 @@ void cancelarReserva(passageiro* reservas, int *n, int *numReservasVal)
     char cpf[20];
     scanf(" %s", cpf);
 
-    if(verificarVoo()){
+    if (verificarVoo()) {
         return;
     }
 
@@ -396,7 +395,7 @@ void fechamentoDia(passageiro* reservas, int* n, int numReservas)
 
 void fechamentoVoo(passageiro* reservas, int* n)
 {
-    FILE *voos = fopen("voos.txt", "a");
+    FILE* voos = fopen("voos.txt", "a");
     if (!voos) {
         printf("Erro na abertura do arquivo voos.txt!\n");
         exit(1);
@@ -441,8 +440,9 @@ void fechamentoVoo(passageiro* reservas, int* n)
     printf("--------------------------------------------------\n");
 }
 
-int verificarVoo() {
-    FILE *voos = fopen("voos.txt", "r");
+int verificarVoo()
+{
+    FILE* voos = fopen("voos.txt", "r");
     if (!voos) {
         printf("Erro na abertura do arquivo voos.txt!\n");
         exit(1);
@@ -450,7 +450,7 @@ int verificarVoo() {
 
     int assentos, fechado = 0;
     float valorEcon, valorExec;
-    
+
     fscanf(voos, "%d, %f, %f, %d", &assentos, &valorEcon, &valorExec, &fechado);
 
     fclose(voos);
