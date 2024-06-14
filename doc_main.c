@@ -327,10 +327,11 @@ Cancela a reserva de um passageiro a partir de seu cpf.
 
 Funcionamento: Lê o cpf. Depois percorre o vetor de reservas, verificando se o
 cpf é o mesmo do buscado. Caso seja, muda o atributo "cacelado" do passageiro
-para 1, depois, dim
+para 1, depois, diminui o número de reservas válidas em 1.
 
-@param *reservas: Array de reservas já realizadas.
-@param n: Número total de reservas realizadas.
+@param *reservas: Ponteiro para o vetor de reservas já realizadas.
+@param *n: Ponteiro para o número total de reservas realizadas.
+@param *numReservasVal: Ponteiro para o número de reservas válidas.
 */
 void cancelarReserva(passageiro* reservas, int* n, int* numReservasVal)
 {
@@ -431,6 +432,15 @@ void fechamentoVoo(passageiro* reservas, int* n)
     printf("--------------------------------------------------\n");
 }
 
+/*
+Verifica se o voo já está fechado.
+
+Funcionamento: Abre o arquivo "voos.txt" no modo de leitura. Depois, lê os
+valores presentes para verificar se o atributo "fechado", que está no final da
+linha, é 1. Caso seja, significa que o voo está fechado.
+
+@return retorna 1 se o voo estiver fechado e 0 se estiver aberto.
+*/
 int verificarVoo()
 {
     FILE* voos = fopen("voos.txt", "r");
