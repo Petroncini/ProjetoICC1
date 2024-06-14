@@ -311,7 +311,6 @@ void cancelarReserva(passageiro* reservas, int* n, int* numReservasVal)
     for (int i = 0; i < *n; i++) {
         if (!strcmp(reservas[i].CPF, cpf)) {
             reservas[i].cancelado = 1;
-            (*n)--;
             (*numReservasVal)--;
         }
     }

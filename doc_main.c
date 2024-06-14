@@ -1,3 +1,7 @@
+/*
+O objetivo desse programa é realizar a gestão da reserva de voos e 
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -311,7 +315,6 @@ void cancelarReserva(passageiro* reservas, int* n, int* numReservasVal)
     for (int i = 0; i < *n; i++) {
         if (!strcmp(reservas[i].CPF, cpf)) {
             reservas[i].cancelado = 1;
-            (*n)--;
             (*numReservasVal)--;
         }
     }
