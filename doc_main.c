@@ -1,5 +1,15 @@
 /*
-O objetivo desse programa é realizar a gestão da reserva de voos e 
+O objetivo desse programa é sistematizar a gestão da reserva de voos de
+uma companhia aérea.
+
+Nele, é possível abrir um voo para reservas, realizar reservas de passageiros,
+modificar, cancelar e consultar essas reservas, além de armazenar essas 
+informações em arquivos no fim de cada dia até o fechamento do voo para reservas.
+
+Autores:
+Caio Petroncini
+Nicolas Maia
+Vitor Veiga
 */
 
 #include <stdio.h>
