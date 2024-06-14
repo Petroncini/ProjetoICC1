@@ -69,6 +69,7 @@ int main(void)
             free_passageiros(reservas, numReservas);
             reservas = malloc(10 * sizeof(passageiro));
             numReservas = 0;
+            numReservasVal = 0;
             break;
         case 1:
             realizarReserva(&reservas, &numReservas, numAssentos, &numReservasVal);
@@ -353,13 +354,19 @@ void fechamentoDia(passageiro* reservas, int* n, int numReservas)
 
 void fechamentoVoo(passageiro* reservas, int* n)
 {
-    FILE* voos = fopen("voos.txt", "a");
+    FILE* voos = fopen("voos.txt", "a+");
     if (!voos) {
         printf("Erro na abertura do arquivo voos.txt!\n");
         exit(1);
     }
 
-    fprintf(voos, ", 1");
+    int v;
+    float f;
+    fscanf(voos, "%d, %f, %f, %d", &v, &f, &f, &v);
+
+    if (v != 1) {   
+        fprintf(voos, ", 1");
+    }
     fclose(voos);
 
     FILE* passageiros = fopen("passageiros.txt", "w");
