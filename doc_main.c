@@ -113,6 +113,12 @@ int main(void)
     return 0;
 }
 
+/*
+Transforma a string do comando em um inteiro para ser tratado no switch.
+
+@param comando: comando em forma de string
+@return um inteiro diferente para cada comando
+*/
 int encodeComand(char* comando)
 {
     if (comando[0] == 'A' && comando[1] == 'V') {
@@ -136,6 +142,9 @@ int encodeComand(char* comando)
     }
 }
 
+/*
+Cria os arquivos necessários para a execução do programa caso eles ainda não existam.
+*/
 void criarArquivos()
 {
     FILE* voos = fopen("voos.txt", "r");
@@ -153,6 +162,14 @@ void criarArquivos()
     fclose(passageiros);
 }
 
+/*
+Abrir um novo voo.
+
+Funcionamento: Abre e apaga os conteúdos dos arquivos necessários, lê as informações
+do voo, coloca elas no arquivo e atualiza o número de assentos total.
+
+@param numAssentos: ponteiro para o número total de assentos.
+*/
 void abrirVoo(int* numAssentos)
 {
     FILE* voos = fopen("voos.txt", "w");
