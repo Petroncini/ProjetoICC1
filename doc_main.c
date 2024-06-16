@@ -44,7 +44,7 @@ void realizarReserva(passageiro** reservas, int* n, int assentos, int* numReserv
 void consultarReserva(passageiro* reservas, int n);
 void modificarReserva(passageiro* reservas, int* n);
 void cancelarReserva(passageiro* reservas, int* n, int* numReservasVal);
-void fechamentoDia(passageiro* reservas, int* n);
+void fechamentoDia(passageiro* reservas, int* n, int numReservas);
 void fechamentoVoo(passageiro* reservas, int* n);
 void carregarReservas(passageiro** reservas, int* n, int* numReservasVal);
 int verificarVoo();
@@ -101,7 +101,7 @@ int main(void)
             cancelarReserva(reservas, &numReservas, &numReservasVal);
             break;
         case 5:
-            fechamentoDia(reservas, &numReservas);
+            fechamentoDia(reservas, &numReservas, numReservas);
             break;
         case 6:
             fechamentoVoo(reservas, &numReservas);
@@ -401,7 +401,7 @@ para o arquivo e escreve na tela as informações importantes do dia.
 @param *n: Ponteiro para o número total de reservas realizadas.
 @param numReservas: Número de reservas totais.
 */
-void fechamentoDia(passageiro* reservas, int* n)
+void fechamentoDia(passageiro* reservas, int* n, int numReservas)
 {
     FILE* passageiros = fopen("passageiros.txt", "w");
     if (!passageiros) {
