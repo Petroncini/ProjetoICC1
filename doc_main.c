@@ -215,6 +215,20 @@ int vooAberto()
     return assentos;
 }
 
+/*
+Carrega as reservas passadas em um vetor de tipo passageiro.
+
+Funcionamento: Abre o arquivo passageiros.txt e lê as informações dos passageiros 
+em cada linha. Cada linha é lida usando o fgets e as informações filtradas por um sscanf.
+É feita a alocação dinâmica das strings nome e sobrenome para cada passageiro, que são 
+inicialmente lidos com vetores de tamanho fixo nome[50] e sobrenome[50].
+No caso de o número de reservas exceder um múltiplo de 10, o vetor reservas
+é realocado com mais 10 espaços.
+
+@param reservas: Ponteiro para o Array de reservas já realizadas. É um ponteiro para poder ser realocado dinamicamente.
+@param n: Ponteiro para o número total de reservas realizadas.
+@param numReservasVal: Ponteiro para o número total de reservas válidas realizadas.
+*/
 void carregarReservas(passageiro** reservas, int* n, int* numReservasVal)
 {
     FILE* passageiros = fopen("passageiros.txt", "r");
@@ -249,6 +263,21 @@ void carregarReservas(passageiro** reservas, int* n, int* numReservasVal)
     }
     fclose(passageiros);
 }
+
+/*
+Lê as informações de uma nova reserva e as armazena.
+
+Funcionamento: Primeiro verifica se existe algum voo aberto através da variável assentos;
+Então lê como input do usuário os dados de um novo passageiro. Se o voo atual estiver fechado ou o número de reservas
+exceder o número de assentos, a função retorna e a reserva não é feita.
+Aqui também é feita alocação dinâmica do nome e sobrenome de cada passageiro, além da realocação do vetor de reservas
+de 10 em 10 reservas.
+
+@param reservas: Ponteiro para o Array de reservas já realizadas. É um ponteiro para poder ser realocado dinamicamente.
+@param n: Ponteiro para o número total de reservas realizadas.
+@param assentos: Número de assentos disponíveis no voo.
+@param numReservasVal: Ponteiro para o número total de reservas válidas realizadas.
+*/
 
 void realizarReserva(passageiro** reservas, int* n, int assentos, int* numReservasVal)
 {
