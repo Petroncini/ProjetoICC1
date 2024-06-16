@@ -116,8 +116,8 @@ int main(void)
 /*
 Transforma a string do comando em um inteiro para ser tratado no switch.
 
-@param comando: comando em forma de string
-@return um inteiro diferente para cada comando
+@param comando: comando em forma de string.
+@return um inteiro diferente para cada comando.
 */
 int encodeComand(char* comando)
 {
@@ -196,6 +196,11 @@ void abrirVoo(int* numAssentos)
     *numAssentos = assentos;
 }
 
+/*
+Conseguir o número de assentos.
+
+@return -1 se o voo não foi aberto, número total de assentos caso contrário.
+*/
 int vooAberto()
 {
     FILE* voos = fopen("voos.txt", "r");
@@ -311,6 +316,16 @@ void consultarReserva(passageiro* reservas, int n)
     }
 }
 
+/*
+Modifica a reserva de um passageiro a partir de seu cpf.
+
+Funcionamento: Lê o cpf antigo e as informações de mudança, percorre a base de
+dados buscando o cpf que desejamos modificar. Se achar esse cpf, modificamos suas
+informações e escrevemos na tela as novas informações do passageiro.
+
+@param *reservas: Array de reservas já realizadas.
+@param *n: ponteiro para o número total de reservas realizadas.
+*/
 void modificarReserva(passageiro* reservas, int* n)
 {
     char CPFAntigo[20], nome[50], sobrenome[50], CPF[20], assento[10];
