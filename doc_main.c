@@ -18,6 +18,7 @@ Vitor Veiga
 #include <stdlib.h>
 #include <string.h>
 
+// Armazena os dados de um passageiro
 typedef struct {
     char* nome;
     char* sobrenome;
@@ -34,6 +35,7 @@ typedef struct {
     int cancelado;
 } passageiro;
 
+// Declaração das funções
 int encodeComand(char* comando);
 void criarArquivos();
 void abrirVoo(int* numAssentos);
@@ -50,11 +52,10 @@ void free_passageiros(passageiro* reservas, int n);
 
 int main(void)
 {
-    char comando[3];
-    int comandoEncoded = -1;
-
+    // Cria e aloca espaços iniciais para a array de passageiros
     passageiro* reservas = malloc(10 * sizeof(passageiro));
 
+    // Número de Reservas Total e Número de Reservas Válidas
     int numReservas = 0;
     int numReservasVal = 0;
 
@@ -63,10 +64,16 @@ int main(void)
     carregarReservas(&reservas, &numReservas, &numReservasVal);
     int numAssentos = vooAberto();
 
+    // Se voo está fechado, retorna as informações necessárias
     if (verificarVoo()) {
         fechamentoVoo(reservas, &numReservas);
     }
 
+    // Declara comando
+    char comando[3];
+    int comandoEncoded = -1;
+
+    // Loop para tratar cada comando lido
     do {
         scanf("%s", comando);
         getchar();
@@ -101,7 +108,7 @@ int main(void)
             break;
         }
     } while (comandoEncoded != 5 && comandoEncoded != 6);
-
+    
     free_passageiros(reservas, numReservas);
     return 0;
 }
