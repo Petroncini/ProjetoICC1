@@ -44,7 +44,7 @@ void realizarReserva(passageiro** reservas, int* n, int assentos, int* numReserv
 void consultarReserva(passageiro* reservas, int n);
 void modificarReserva(passageiro* reservas, int* n);
 void cancelarReserva(passageiro* reservas, int* n, int* numReservasVal);
-void fechamentoDia(passageiro* reservas, int* n, int numReservas);
+void fechamentoDia(passageiro* reservas, int* n);
 void fechamentoVoo(passageiro* reservas, int* n);
 void carregarReservas(passageiro** reservas, int* n, int* numReservasVal);
 int verificarVoo();
@@ -101,7 +101,7 @@ int main(void)
             cancelarReserva(reservas, &numReservas, &numReservasVal);
             break;
         case 5:
-            fechamentoDia(reservas, &numReservas, numReservas);
+            fechamentoDia(reservas, &numReservas);
             break;
         case 6:
             fechamentoVoo(reservas, &numReservas);
@@ -401,7 +401,7 @@ para o arquivo e escreve na tela as informações importantes do dia.
 @param *n: Ponteiro para o número total de reservas realizadas.
 @param numReservas: Número de reservas totais.
 */
-void fechamentoDia(passageiro* reservas, int* n, int numReservas)
+void fechamentoDia(passageiro* reservas, int* n)
 {
     FILE* passageiros = fopen("passageiros.txt", "w");
     if (!passageiros) {
@@ -430,6 +430,16 @@ void fechamentoDia(passageiro* reservas, int* n, int numReservas)
     printf("--------------------------------------------------\n");
 }
 
+/*
+Fecha o voo, finalizando a atual execução do programa.
+
+Funcionamento: Atualiza o status de finalizado do voo no arquivo, atualiza o arquivo
+de passageiros com as novas informações de cada um e escreve na tela as informações
+dos passageiros e do voo, como o valor total arrecadado e o nome dos passageiros.
+
+@param *reservas: Ponteiro para o vetor de reservas já realizadas.
+@param *n: Ponteiro para o número total de reservas realizadas.
+*/
 void fechamentoVoo(passageiro* reservas, int* n)
 {
     FILE* voos = fopen("voos.txt", "a+");
