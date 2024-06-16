@@ -391,6 +391,16 @@ void cancelarReserva(passageiro* reservas, int* n, int* numReservasVal)
     }
 }
 
+/*
+Fecha o dia, finalizando a atual execução do programa.
+
+Funcionamento: Abre o arquivo de passageiros, copia os dados dos passageiros atuais
+para o arquivo e escreve na tela as informações importantes do dia.
+
+@param *reservas: Ponteiro para o vetor de reservas já realizadas.
+@param *n: Ponteiro para o número total de reservas realizadas.
+@param numReservas: Número de reservas totais.
+*/
 void fechamentoDia(passageiro* reservas, int* n, int numReservas)
 {
     FILE* passageiros = fopen("passageiros.txt", "w");
@@ -499,6 +509,12 @@ int verificarVoo()
     return fechado;
 }
 
+/*
+Libera o espaço na memória heap ocupado pela array de passageiros.
+
+@param *reservas: Array de passageiros.
+@param n: número total de reservas realizadas.
+*/
 void free_passageiros(passageiro* reservas, int n)
 {
     for (int i = 0; i < n; i++) {
