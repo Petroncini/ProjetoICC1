@@ -48,7 +48,7 @@ void fechamentoDia(passageiro* reservas, int* n, int numReservasVal);
 void fechamentoVoo(passageiro* reservas, int* n);
 void carregarReservas(passageiro** reservas, int* n, int* numReservasVal);
 int verificarVoo();
-void free_passageiros(passageiro* reservas, int n);
+void freePassageiros(passageiro* reservas, int n);
 
 int main(void)
 {
@@ -83,7 +83,7 @@ int main(void)
         switch (comandoEncoded) {
         case 0:
             abrirVoo(&numAssentos);
-            free_passageiros(reservas, numReservas);
+            freePassageiros(reservas, numReservas);
             reservas = malloc(10 * sizeof(passageiro));
             numReservas = 0;
             numReservasVal = 0;
@@ -109,7 +109,7 @@ int main(void)
         }
     } while (comandoEncoded != 5 && comandoEncoded != 6);
     
-    free_passageiros(reservas, numReservas);
+    freePassageiros(reservas, numReservas);
     return 0;
 }
 
@@ -178,6 +178,7 @@ void abrirVoo(int* numAssentos)
         exit(1);
     }
 
+    // Limpar o arquivo de passageiros
     FILE* passageiros = fopen("passageiros.txt", "w");
     if (!passageiros) {
         printf("Erro na abertura do arquivo passageiros.txt!\n");
@@ -199,7 +200,7 @@ void abrirVoo(int* numAssentos)
 /*
 Conseguir o número de assentos.
 
-@return -1 se o voo não foi aberto, número total de assentos caso contrário.
+@return -1 se o voo não foi aberto e o número total de assentos caso contrário.
 */
 int vooAberto()
 {
@@ -268,12 +269,13 @@ void carregarReservas(passageiro** reservas, int* n, int* numReservasVal)
 Lê as informações de uma nova reserva e as armazena.
 
 Funcionamento: Primeiro verifica se existe algum voo aberto através da variável assentos;
-Então lê como input do usuário os dados de um novo passageiro. Se o voo atual estiver fechado ou o número de reservas
-exceder o número de assentos, a função retorna e a reserva não é feita.
-Aqui também é feita alocação dinâmica do nome e sobrenome de cada passageiro, além da realocação do vetor de reservas
-de 10 em 10 reservas.
+Então lê como input do usuário os dados de um novo passageiro. Se o voo atual estiver 
+fechado ou o número de reservas exceder o número de assentos, a função retorna e a reserva 
+não é feita. Aqui também é feita alocação dinâmica do nome e sobrenome de cada passageiro,
+além da realocação do vetor de reservas de 10 em 10 reservas.
 
-@param reservas: Ponteiro para o Array de reservas já realizadas. É um ponteiro para poder ser realocado dinamicamente.
+@param reservas: Ponteiro para o Array de reservas já realizadas. É um ponteiro
+para poder ser realocado dinamicamente.
 @param n: Ponteiro para o número total de reservas realizadas.
 @param assentos: Número de assentos disponíveis no voo.
 @param numReservasVal: Ponteiro para o número total de reservas válidas realizadas.
@@ -477,11 +479,11 @@ void fechamentoVoo(passageiro* reservas, int* n)
         exit(1);
     }
 
-    int v;
-    float f;
-    fscanf(voos, "%d, %f, %f, %d", &v, &f, &f, &v);
+    int assentos, aberto = 0;
+    float valorEcon, valorExec;
+    fscanf(voos, "%d, %f, %f, %d", &assentos, &valorEcon, &valorEcon, &aberto);
 
-    if (v != 1) {   
+    if (aberto != 1) {   
         fprintf(voos, ", 1");
     }
     fclose(voos);
@@ -554,7 +556,7 @@ Libera o espaço na memória heap ocupado pela array de passageiros.
 @param *reservas: Array de passageiros.
 @param n: número total de reservas realizadas.
 */
-void free_passageiros(passageiro* reservas, int n)
+void freePassageiros(passageiro* reservas, int n)
 {
     for (int i = 0; i < n; i++) {
         free(reservas[i].nome);
